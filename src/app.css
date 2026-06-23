@@ -1,0 +1,502 @@
+@font-face {
+  font-family: 'Uthmanic';
+  src: url('https://static.qurancdn.com/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.woff2')
+    format('woff2');
+  font-display: swap;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #121212;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #121212;
+  color: #d4c9a8;
+  font-family: sans-serif;
+}
+
+/* --- HEADER --- */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: #1e1e1e;
+  color: #e0d6b8;
+  border-bottom: 1px solid #2a2a2a;
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.surah-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #c9a84c;
+}
+
+.surah-arabic {
+  font-family: 'Uthmanic', serif;
+  font-size: 18px;
+  direction: rtl;
+  color: #e0d6b8;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #888;
+}
+
+.juz-badge {
+  background: #2a2216;
+  color: #c9a84c;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  border: 1px solid #3a3220;
+}
+
+/* --- PAGE CONTAINER --- */
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* --- MUSHAF PAGE --- */
+
+.mushaf-page {
+  width: min(520px, 96vw);
+  padding: 36px 28px 40px;
+  background: #2a2216;
+  border: 1px solid #4a3a22;
+  border-radius: 2px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  direction: rtl;
+  font-size: 22px;
+  line-height: 2.4;
+  font-family: 'Uthmanic', serif;
+  color: #d4c9a8;
+  position: relative;
+  overflow: hidden;
+}
+
+.mushaf-page.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 600px;
+}
+
+.page-loading,
+.page-error {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  direction: ltr;
+  padding: 40px;
+}
+
+.page-error {
+  color: #c0392b;
+}
+
+/* --- LINES --- */
+
+.line {
+  display: block;
+  min-height: 1.8em;
+}
+
+.line.surah-header {
+  text-align: center;
+  font-family: 'Uthmanic', serif;
+  font-size: 24px;
+  color: #c9a84c;
+  padding: 16px 0 12px;
+  border-bottom: 1px solid #4a3a22;
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+
+.line.basmala {
+  text-align: center;
+  font-size: 24px;
+  color: #e0d6b8;
+  padding: 12px 0 20px;
+}
+
+.line.text-line {
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  word-spacing: 0.12em;
+}
+
+/* --- WORDS --- */
+
+.word {
+  display: inline;
+  transition: opacity 0.3s ease-out, filter 0.3s ease-out;
+}
+
+.word.revealed {
+  opacity: 1;
+  filter: blur(0px);
+  color: #e8dcc8;
+}
+
+.word.context {
+  opacity: 0.12;
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+.word.hidden {
+  opacity: 0;
+  filter: blur(0px);
+  pointer-events: none;
+}
+
+/* --- PROGRESS --- */
+
+.progress-bar {
+  width: 100%;
+  max-width: 520px;
+  height: 4px;
+  background: #2a2a2a;
+  border-radius: 2px;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c9a84c, #e0c97a);
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+
+.progress-label {
+  position: absolute;
+  top: -16px;
+  right: 0;
+  font-size: 10px;
+  color: #555;
+}
+
+/* --- PAGE NAV --- */
+
+.page-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 20px;
+  background: #1e1e1e;
+  border-top: 1px solid #2a2a2a;
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  padding: 8px 18px;
+  border: 1px solid #4a3a22;
+  border-radius: 4px;
+  background: #2a2216;
+  color: #c9a84c;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: #3a3220;
+  color: #e0d6b8;
+}
+
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.surah-select {
+  padding: 8px 12px;
+  border: 1px solid #4a3a22;
+  border-radius: 4px;
+  background: #2a2216;
+  color: #c9a84c;
+  font-size: 13px;
+  max-width: 240px;
+  cursor: pointer;
+}
+
+.surah-select option {
+  background: #2a2216;
+  color: #c9a84c;
+}
+
+.juz-select {
+  padding: 8px 12px;
+  border: 1px solid #4a3a22;
+  border-radius: 4px;
+  background: #2a2216;
+  color: #c9a84c;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.juz-select option {
+  background: #2a2216;
+  color: #c9a84c;
+}
+
+.page-jump {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.page-input {
+  width: 52px;
+  padding: 8px 8px;
+  border: 1px solid #4a3a22;
+  border-radius: 4px;
+  background: #2a2216;
+  color: #c9a84c;
+  font-size: 13px;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+.page-input::-webkit-outer-spin-button,
+.page-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.page-total {
+  font-size: 12px;
+  color: #888;
+}
+
+/* --- SHORTCUTS --- */
+
+.shortcuts-help {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 8px 16px;
+  background: #1e1e1e;
+  border-top: 1px solid #2a2a2a;
+  font-size: 11px;
+  color: #555;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.shortcuts-help kbd {
+  background: #121212;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-family: monospace;
+  font-size: 10px;
+  color: #777;
+}
+
+/* --- OVERLAY --- */
+
+.overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.overlay-card {
+  background: #2a2216;
+  border: 1px solid #4a3a22;
+  border-radius: 6px;
+  padding: 24px 28px;
+  max-width: 460px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+.overlay-card h2 {
+  margin: 0 0 16px;
+  color: #c9a84c;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.shortcut-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.shortcut-table td {
+  padding: 8px 4px;
+  border-bottom: 1px solid #3a2e1a;
+  color: #d4c9a8;
+}
+
+.shortcut-table td:first-child {
+  white-space: nowrap;
+  width: 45%;
+  color: #e0d6b8;
+}
+
+.shortcut-table kbd {
+  background: #121212;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #c9a84c;
+}
+
+.overlay-touch-note {
+  margin: 16px 0 20px;
+  font-size: 12px;
+  color: #888;
+  line-height: 1.5;
+}
+
+.overlay-close {
+  display: block;
+  margin: 0 auto;
+  padding: 8px 24px;
+  border: 1px solid #4a3a22;
+  border-radius: 4px;
+  background: #3a3220;
+  color: #e0d6b8;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.overlay-close:hover {
+  background: #4a4230;
+}
+
+/* --- PROGRESS BAR (mobile tuning) --- */
+
+.progress-bar {
+  height: 4px;
+}
+
+/* --- MOBILE TOUCH HINT --- */
+
+.mobile-touch-hint {
+  display: none;
+  text-align: center;
+  padding: 8px 12px;
+  background: #1e1e1e;
+  color: #777;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* --- RESPONSIVE --- */
+
+@media (max-width: 768px) {
+  .shortcuts-help {
+    display: none;
+  }
+  .mobile-touch-hint {
+    display: block;
+  }
+}
+
+@media (max-width: 600px) {
+  .mushaf-page {
+    width: 96vw;
+    padding: 20px 12px 24px;
+    font-size: 18px;
+    line-height: 2.2;
+  }
+
+  .line.surah-header,
+  .line.basmala {
+    font-size: 20px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 12px;
+    text-align: center;
+  }
+
+  .header-left {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .page-nav {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 10px;
+    position: sticky;
+    bottom: 0;
+  }
+
+  .nav-btn {
+    padding: 10px 20px;
+    min-height: 44px;
+  }
+
+  .surah-select,
+  .juz-select {
+    max-width: 150px;
+    font-size: 12px;
+    padding: 10px 12px;
+    min-height: 44px;
+  }
+
+  .page-input {
+    padding: 10px 8px;
+    min-height: 44px;
+  }
+
+  .progress-bar {
+    height: 6px;
+  }
+
+  .overlay-card {
+    padding: 20px 18px;
+  }
+
+  .shortcut-table {
+    font-size: 12px;
+  }
+}
