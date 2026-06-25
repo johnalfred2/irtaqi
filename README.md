@@ -1,43 +1,77 @@
-# Svelte + Vite
+# Irtaqi
 
-This template should help get you started developing with Svelte in Vite.
+A free, open-source, private Quran memorization app that displays pixel-exact Madani Mushaf pages and lets you hide/reveal words one by one.
 
-## Recommended IDE Setup
+## The Vision & Meaning
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+This project and its name are inspired by the beautiful narration of the Prophet Muhammad (ﷺ):
+<div dir="rtl" align="right">«يُقَالُ لِصَاحِبِ الْقُرْآنِ: اقْرَأْ وَارْتَقِ وَرَتِّلْ كَمَا كُنْتَ تُرَتِّلُ فِي الدُّنْيَا، فَإِنَّ مَنْزِلَتَكَ عِنْدَ آخِرِ آيَةٍ تَقْرَؤُهَا»</div>
 
-## Need an official Svelte framework?
+*"It will be said to the companion of the Qur'an: Read, and ascend (irtaqi), and recite melodiously as you used to recite in the world, for indeed your abode will be at the last verse you recite."*
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+## The Problem
 
-## Technical considerations
+Hiding words with a hand is impractical, and existing apps that do this are either subscription-based, closed-source, or both. This app exists to give the Ummah a forever-free, privacy-respecting alternative.
 
-**Why use this over SvelteKit?**
+## How it works
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+Each Quran page is rendered from the official Madani Mushaf SVG artwork (not a font). Every word on the page is a separate identifiable element. A single counter (`revealedUpto`) controls visibility — words at or below the counter are shown; anything above is hidden.
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+- Tap to reveal the next word
+- Tap again to reveal another
+- Long-press to reveal a full ayah at once
+- Toggle the eye button to show or hide everything instantly
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+Your progress is saved per-page and persists between sessions. Arabic text only — no translations, no audio, no distractions.
 
-**Why include `.vscode/extensions.json`?**
+## Features
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+- **Manual active recall:** Reveal or hide individual words, ayahs, or the entire page
+- **Pixel-perfect Mushaf:** Rendered from the MushafDatabase ligature-based SVG files — the same artwork used in printed Madani Mushafs
+- **Global toggles:** Show/hide all words, dark/light theme
+- **Fully offline:** SVGs are downloaded once, then everything works without internet
+- **Minimalist design:** Full-screen SVG, no scrolling, friction-free focus
+- **Privacy-first:** No accounts, no analytics, no data collection
 
-**Why enable `checkJs` in the JS template?**
+## Tech Stack
 
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
+- **Frontend:** Svelte 5 + Vite
+- **Mobile:** Capacitor (wraps the web app as a native Android APK)
+- **Storage:** Browser Cache API for offline SVGs, localStorage for progress
+- **SVG source:** [MushafDatabase Ligature-Based SVG Project](https://github.com/mushafdatabase/MushafDatabase-Ligature-Based-SVG)
 
-**Why is HMR not preserving my local component state?**
+## Roadmap
 
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
+These are future directions, not commitments — the core app is already usable as-is.
 
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
+- **Now:** Manual word-by-word reveal, page navigation, per-page progress, eye toggle, dark/light theme
+- **Next:** Automatic ayah-timed mode for hands-free memorization review sessions
+- **Further out:** Highlighting common mistake patterns, smarter review scheduling
 
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+## Install
+
+Download the latest APK from the [Releases page](https://github.com/YOUR_USER/YOUR_REPO/releases). On your Android device, open the downloaded file and allow installation from unknown sources.
+
+## Developer Setup
+
+```bash
+git clone <repo-url>
+cd irtaqi
+npm install
+npm run dev        # dev server at http://localhost:5173
+npm run build      # production build to dist/
 ```
+
+To build the Android APK:
+
+```bash
+npx cap copy android
+cd android && ./gradlew assembleDebug
+```
+
+Requires Android SDK and JDK 21. See the [Capacitor docs](https://capacitorjs.com/docs/android) for setup.
+
+## License & Credits
+
+- **Application code:** GNU General Public License v3.0 — the software, its derivatives, and future modifications remain free and open-source
+- **Quranic SVGs:** [MushafDatabase Ligature-Based SVG Project](https://github.com/mushafdatabase/MushafDatabase-Ligature-Based-SVG) — Sadaqa Jariya terms (free for non-profit and educational use, provided the text is never altered or misrepresented)

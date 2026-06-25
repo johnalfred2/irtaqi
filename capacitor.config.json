@@ -1,0 +1,10 @@
+{
+  "appId": "com.quran.assistant",
+  "appName": "QuranAssistant",
+  "webDir": "dist",
+  "server": {
+    "allowNavigation": [
+      "raw.githubusercontent.com"
+    ]
+  }
+}
