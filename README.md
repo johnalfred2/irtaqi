@@ -50,12 +50,12 @@ These are future directions, not commitments — the core app is already usable 
 
 ## Install
 
-Download the latest APK from the [Releases page](https://github.com/YOUR_USER/YOUR_REPO/releases). On your Android device, open the downloaded file and allow installation from unknown sources.
+Download the latest APK from the [Releases page](https://github.com/johnalfred2/irtaqi/releases). On your Android device, open the downloaded file and allow installation from unknown sources.
 
 ## Developer Setup
 
 ```bash
-git clone <repo-url>
+git clone git@github.com:johnalfred2/irtaqi.git
 cd irtaqi
 npm install
 npm run dev        # dev server at http://localhost:5173
