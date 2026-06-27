@@ -1,0 +1,42 @@
+Categories:
+  - Education
+  - Religion
+License: GPL-3.0-or-later
+AuthorName: John Alfred
+SourceCode: https://github.com/johnalfred2/irtaqi
+IssueTracker: https://github.com/johnalfred2/irtaqi/issues
+WebSite: https://johnalfred2.github.io/irtaqi/
+
+Name: Irtaqi
+Summary: Quran memorization with word-by-word reveal
+Description: |
+  A Quran memorization tool that displays pixel-exact Mushaf pages
+  with words hidden and revealed one by one. Features:
+  - Word-by-word reveal for active memorization
+  - Per-page progress tracking with localStorage persistence
+  - Touch gestures (tap, long-press, swipe)
+  - Dark/light theme toggle
+  - Ayah-aware navigation (prev/next complete ayah)
+  - Page, surah, and juz navigation
+  - Fully offline after initial download (Capacitor Android)
+
+Repo: https://github.com/johnalfred2/irtaqi
+RepoType: git
+
+Builds:
+  - versionName: 0.1.1
+    versionCode: 2
+    commit: v0.1.1
+    subdir: quran-site
+    init:
+      - npm install
+    output: android/app/build/outputs/apk/release/app-release-unsigned.apk
+    build:
+      - npm run build
+      - npx cap sync android
+      - cd android && ./gradlew assembleRelease
+
+AutoUpdateMode: Version v%v
+UpdateCheckMode: Tags
+CurrentVersion: 0.1.1
+CurrentVersionCode: 2
