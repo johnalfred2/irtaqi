@@ -131,12 +131,13 @@
       const el = svgContainer.querySelector(id);
       if (el) {
         const bbox = el.getBBox();
-        const pad = 24;
+        const padH = 24;
+        const [padTop, padBottom] = mode === 'page' ? [16, 32] : [32, 16];
         const rect = document.createElementNS(ns, 'rect');
-        rect.setAttribute('x', bbox.x - pad);
-        rect.setAttribute('y', bbox.y - pad);
-        rect.setAttribute('width', bbox.width + pad * 2);
-        rect.setAttribute('height', bbox.height + pad * 2);
+        rect.setAttribute('x', bbox.x - padH);
+        rect.setAttribute('y', bbox.y - padTop);
+        rect.setAttribute('width', bbox.width + padH * 2);
+        rect.setAttribute('height', bbox.height + padTop + padBottom);
         rect.setAttribute('fill', 'transparent');
         rect.setAttribute('pointer-events', 'fill');
         rect.setAttribute('data-nav-click', 'true');
