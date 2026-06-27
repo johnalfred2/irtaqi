@@ -328,11 +328,11 @@ html, body {
   .floating-toggles {
     display: flex;
     position: fixed;
-    top: 8px;
+    bottom: 48px;
     right: 12px;
     z-index: 50;
-    flex-direction: column;
-    gap: 6px;
+    flex-direction: row;
+    gap: 8px;
   }
 
   .float-btn {

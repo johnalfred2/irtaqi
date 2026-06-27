@@ -32,10 +32,10 @@
       if (loadingPage !== num) return;
       if (!svgContainer) return;
       svgContainer.innerHTML = svgText;
-      if (enableNavClicks) attachNavClicks();
       requestAnimationFrame(() => {
         cropToContent(svgContainer);
         fitSVG(svgContainer);
+        if (enableNavClicks) attachNavClicks();
       });
       setupObserver();
       const parsed = parsePageSVG(svgText);
@@ -126,15 +126,26 @@
       { id: '#md-non-quranic-header-juz-name', mode: 'juz' },
       { id: '#md-non-quranic-page-number', mode: 'page' },
     ];
+    const ns = 'http://www.w3.org/2000/svg';
     for (const { id, mode } of items) {
       const el = svgContainer.querySelector(id);
       if (el) {
-        el.setAttribute('data-nav-click', 'true');
-        el.style.cursor = 'pointer';
-        el.addEventListener('click', (e) => {
+        const bbox = el.getBBox();
+        const pad = 24;
+        const rect = document.createElementNS(ns, 'rect');
+        rect.setAttribute('x', bbox.x - pad);
+        rect.setAttribute('y', bbox.y - pad);
+        rect.setAttribute('width', bbox.width + pad * 2);
+        rect.setAttribute('height', bbox.height + pad * 2);
+        rect.setAttribute('fill', 'transparent');
+        rect.setAttribute('pointer-events', 'fill');
+        rect.setAttribute('data-nav-click', 'true');
+        rect.style.cursor = 'pointer';
+        rect.addEventListener('click', (e) => {
           e.stopPropagation();
           onNavigateClick?.(mode);
         });
+        el.parentNode.insertBefore(rect, el.nextSibling);
       }
     }
   }
