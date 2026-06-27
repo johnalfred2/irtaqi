@@ -121,6 +121,8 @@
 
   function attachNavClicks() {
     if (!svgContainer) return;
+    const svg = svgContainer.querySelector('svg');
+    if (svg) svg.style.overflow = 'visible';
     const items = [
       { id: '#md-non-quranic-header-surah-name', mode: 'surah' },
       { id: '#md-non-quranic-header-juz-name', mode: 'juz' },
