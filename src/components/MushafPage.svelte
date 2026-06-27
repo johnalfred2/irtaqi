@@ -91,14 +91,34 @@
     const aspect = getSVGAspect(svg);
     const availH = parent.clientHeight;
     const availW = parent.clientWidth;
-    let h = availH;
-    let w = h * aspect;
-    if (w > availW) {
-      w = availW;
-      h = w / aspect;
+    const containerAspect = availW / availH;
+    if (containerAspect > aspect) {
+      const isTouch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+      if (isTouch) {
+        const w = availW;
+        const h = w / aspect;
+        svg.style.width = `${w}px`;
+        svg.style.height = `${h}px`;
+      } else {
+        let h = availH;
+        let w = h * aspect;
+        if (w > availW) {
+          w = availW;
+          h = w / aspect;
+        }
+        svg.style.width = `${w}px`;
+        svg.style.height = `${h}px`;
+      }
+    } else {
+      let h = availH;
+      let w = h * aspect;
+      if (w > availW) {
+        w = availW;
+        h = w / aspect;
+      }
+      svg.style.width = `${w}px`;
+      svg.style.height = `${h}px`;
     }
-    svg.style.width = `${w}px`;
-    svg.style.height = `${h}px`;
     svg.style.display = 'block';
   }
 
