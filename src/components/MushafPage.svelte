@@ -1,7 +1,7 @@
 <script>
   import { fetchPageSVG, parsePageSVG } from '../lib/svgApi.js';
 
-  let { pageNumber = 1, revealedUpto = -1, onLoaded = null } = $props();
+  let { pageNumber = 1, revealedUpto = -1, onLoaded = null, enableNavClicks = false, onNavigateClick = null } = $props();
 
   let svgContainer = $state(null);
   let wordIds = $state([]);
@@ -32,6 +32,7 @@
       if (loadingPage !== num) return;
       if (!svgContainer) return;
       svgContainer.innerHTML = svgText;
+      if (enableNavClicks) attachNavClicks();
       requestAnimationFrame(() => {
         cropToContent(svgContainer);
         fitSVG(svgContainer);
@@ -115,6 +116,26 @@
     if (resizeObserver) {
       resizeObserver.disconnect();
       resizeObserver = null;
+    }
+  }
+
+  function attachNavClicks() {
+    if (!svgContainer) return;
+    const items = [
+      { id: '#md-non-quranic-header-surah-name', mode: 'surah' },
+      { id: '#md-non-quranic-header-juz-name', mode: 'juz' },
+      { id: '#md-non-quranic-page-number', mode: 'page' },
+    ];
+    for (const { id, mode } of items) {
+      const el = svgContainer.querySelector(id);
+      if (el) {
+        el.setAttribute('data-nav-click', 'true');
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          onNavigateClick?.(mode);
+        });
+      }
     }
   }
 

@@ -24,6 +24,8 @@
   let loadingPage = $state(false);
   let showOverlay = $state(false);
   let pendingMode = 'restore';
+  let isTouchDevice = $state(false);
+  let navOverlayMode = $state(null);
 
   const pageStates = new Map();
 
@@ -64,6 +66,8 @@
     loadingPage = true;
     acquireWakeLock();
     document.addEventListener('visibilitychange', handleVisibility);
+
+    isTouchDevice = matchMedia('(hover: none) and (pointer: coarse)').matches;
 
     const isNative = typeof window.Capacitor?.isNativePlatform === 'function' && window.Capacitor.isNativePlatform();
     if (isNative) {
@@ -178,6 +182,7 @@
 
   function onTouchStart(e) {
     if (loadingPage) return;
+    if (e.target.closest('[data-nav-click]')) return;
     const tag = e.target.tagName;
     if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA' || tag === 'BUTTON' || e.target.closest('button')) return;
     if (e.touches.length !== 1) return;
@@ -274,6 +279,44 @@
     persistState();
   }
 
+  function onNavigateClick(mode) {
+    navOverlayMode = mode;
+  }
+
+  function closeNavOverlay() {
+    navOverlayMode = null;
+  }
+
+  function selectNavOption(mode, value) {
+    if (mode === 'surah') {
+      const s = surahs.find((s) => s.number === value);
+      if (s && s.startPage) goToPage(s.startPage);
+    } else if (mode === 'juz') {
+      goToPage((value - 1) * 20 + 1);
+    } else if (mode === 'page') {
+      goToPage(value);
+    }
+    navOverlayMode = null;
+  }
+
+  function handleToggleAll() {
+    if (!activeLayout) return;
+    eyeOpen = !eyeOpen;
+    if (eyeOpen) {
+      activeRevealed = activeLayout.totalWords - 1;
+    } else {
+      activeRevealed = -1;
+      pageStates.clear();
+    }
+    persistState();
+  }
+
+  function handleToggleTheme() {
+    darkTheme = !darkTheme;
+    document.documentElement.classList.toggle('light', !darkTheme);
+    persistState();
+  }
+
   function goToPage(page, mode = 'restore') {
     let target = Math.max(1, Math.min(TOTAL_PAGES, page));
     if (target === activePage) return;
@@ -304,46 +347,108 @@
     ontouchmove={onTouchMove}
     ontouchend={onTouchEnd}
   >
-    <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} />
+    <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} enableNavClicks={isTouchDevice} onNavigateClick={onNavigateClick} />
   </div>
 
-  <PageNav
-    currentPage={activePage}
-    totalPages={TOTAL_PAGES}
-    {surahs}
-    onPageChange={goToPage}
-    {eyeOpen}
-    {darkTheme}
-    onToggleAll={() => {
-      if (!activeLayout) return;
-      eyeOpen = !eyeOpen;
-      if (eyeOpen) {
-        activeRevealed = activeLayout.totalWords - 1;
-      } else {
-        activeRevealed = -1;
-        pageStates.clear();
-      }
-      persistState();
-    }}
-    onToggleTheme={() => {
-      darkTheme = !darkTheme;
-      document.documentElement.classList.toggle('light', !darkTheme);
-      persistState();
-    }}
-  />
+  {#if !isTouchDevice}
+    <PageNav
+      currentPage={activePage}
+      totalPages={TOTAL_PAGES}
+      {surahs}
+      onPageChange={goToPage}
+      {eyeOpen}
+      {darkTheme}
+      onToggleAll={handleToggleAll}
+      onToggleTheme={handleToggleTheme}
+    />
 
-  <div class="shortcuts-help">
-    <span><kbd>Space</kbd>/<kbd>&larr;</kbd> next word</span>
-    <span><kbd>Shift</kbd>+<kbd>Space</kbd> next ayah</span>
-    <span><kbd>Backspace</kbd>/<kbd>&rarr;</kbd> prev word</span>
-    <span><kbd>h</kbd> hide all &middot; <kbd>s</kbd> show all</span>
-    <span><kbd>n</kbd>/<kbd>p</kbd> next/prev page</span>
-    <span><kbd>?</kbd> all shortcuts</span>
-  </div>
+    <div class="shortcuts-help">
+      <span><kbd>Space</kbd>/<kbd>&larr;</kbd> next word</span>
+      <span><kbd>Shift</kbd>+<kbd>Space</kbd> next ayah</span>
+      <span><kbd>Backspace</kbd>/<kbd>&rarr;</kbd> prev word</span>
+      <span><kbd>h</kbd> hide all &middot; <kbd>s</kbd> show all</span>
+      <span><kbd>n</kbd>/<kbd>p</kbd> next/prev page</span>
+      <span><kbd>?</kbd> all shortcuts</span>
+    </div>
+  {/if}
+
+  {#if isTouchDevice}
+    <div class="floating-toggles">
+      <button class="float-btn" onclick={handleToggleAll} title={eyeOpen ? 'Hide all' : 'Show all'}>
+        {#if eyeOpen}
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        {:else}
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+            <line x1="1" y1="1" x2="23" y2="23"/>
+            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+          </svg>
+        {/if}
+      </button>
+      <button class="float-btn" onclick={handleToggleTheme} title={darkTheme ? 'Light mode' : 'Dark mode'}>
+        {#if darkTheme}
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        {:else}
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        {/if}
+      </button>
+    </div>
+  {/if}
 
   <div class="mobile-touch-hint">
     Tap left/right to step &middot; long-press for ayah &middot; swipe to change page
   </div>
+
+  {#if navOverlayMode}
+    <div class="overlay-backdrop" onclick={closeNavOverlay} onkeydown={(e) => e.key === 'Escape' && closeNavOverlay()} role="presentation">
+      <div class="overlay-card overlay-card-nav" tabindex="0" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+        <h2>
+          {#if navOverlayMode === 'surah'}Select Surah
+          {:else if navOverlayMode === 'juz'}Select Juz
+          {:else}Select Page
+          {/if}
+        </h2>
+        <div class="nav-overlay-list">
+          {#if navOverlayMode === 'surah'}
+            {#each surahs as s}
+              <button class="nav-overlay-item" onclick={() => selectNavOption('surah', s.number)}>
+                {s.number}. {s.name}
+              </button>
+            {/each}
+          {:else if navOverlayMode === 'juz'}
+            {#each Array.from({ length: 30 }, (_, i) => i + 1) as juz}
+              <button class="nav-overlay-item" onclick={() => selectNavOption('juz', juz)}>
+                Juz {juz}
+              </button>
+            {/each}
+          {:else}
+            {#each Array.from({ length: 604 }, (_, i) => i + 1) as p}
+              <button class="nav-overlay-item" onclick={() => selectNavOption('page', p)}>
+                Page {p}
+              </button>
+            {/each}
+          {/if}
+        </div>
+        <button class="overlay-close" onclick={closeNavOverlay}>Close</button>
+      </div>
+    </div>
+  {/if}
 
   {#if showOverlay}
     <div class="overlay-backdrop" onclick={() => (showOverlay = false)} onkeydown={(e) => e.key === 'Escape' && (showOverlay = false)} role="presentation">
