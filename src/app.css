@@ -362,6 +362,11 @@ html, body {
     justify-content: flex-start;
     -webkit-overflow-scrolling: touch;
   }
+
+  .svg-container {
+    height: auto;
+    overflow: visible;
+  }
 }
 
 .nav-overlay-list {
