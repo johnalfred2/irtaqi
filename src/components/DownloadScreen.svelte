@@ -31,7 +31,9 @@
     }
   }
 
-  $effect(() => {
+  import { onMount } from 'svelte';
+
+  onMount(() => {
     checkDownloaded().then((ok) => {
       if (ok) {
         ready = true;

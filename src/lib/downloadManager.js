@@ -1,7 +1,6 @@
 import { savePageSVG, getStoredPageCount, clearAllPages } from './storage.js';
+import { TOTAL_PAGES, SVG_BASE } from './constants.js';
 
-const TOTAL_PAGES = 604;
-const SVG_BASE = 'https://raw.githubusercontent.com/mushafdatabase/MushafDatabase-Ligature-Based-SVG/main/SVG%20V1.01';
 const PARALLEL = 6;
 
 export async function checkDownloaded() {

@@ -175,8 +175,11 @@
     }
   }
 
+  let lastUpto = -2;
+
   function applyReveal(upto) {
-    if (!svgContainer || wordIds.length === 0) return;
+    if (!svgContainer || wordIds.length === 0 || upto === lastUpto) return;
+    lastUpto = upto;
     for (const id of wordIds) {
       const el = svgContainer.querySelector(`#${CSS.escape(id)}`);
       if (!el) continue;

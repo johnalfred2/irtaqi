@@ -1,7 +1,7 @@
 const CACHE_NAME = 'quran-pages';
 
 function storageKey(num) {
-  return `page-${String(num).padStart(3, '0')}`;
+  return new Request(`/quran-pages/${String(num).padStart(3, '0')}`);
 }
 
 export async function savePageSVG(num, text) {

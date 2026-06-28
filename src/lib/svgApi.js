@@ -1,6 +1,5 @@
 import { getPageSVG, savePageSVG } from './storage.js';
-
-const SVG_BASE = 'https://raw.githubusercontent.com/mushafdatabase/MushafDatabase-Ligature-Based-SVG/main/SVG%20V1.01';
+import { SVG_BASE } from './constants.js';
 
 export async function fetchPageSVG(pageNumber) {
   const padded = String(pageNumber).padStart(3, '0');
@@ -92,4 +91,28 @@ export function parsePageSVG(svgText) {
     wordIds,
     wordIndexMap,
   };
+}
+
+export function getNextAyahEnd(ayat, currentUpto) {
+  for (const a of ayat) {
+    if (currentUpto >= a.startWord && currentUpto < a.endWord) {
+      return a.endWord;
+    }
+  }
+  for (const a of ayat) {
+    if (a.startWord > currentUpto) return a.endWord;
+  }
+  return currentUpto;
+}
+
+export function getPrevAyahStart(ayat, currentUpto) {
+  for (let i = ayat.length - 1; i >= 0; i--) {
+    if (ayat[i].startWord <= currentUpto && ayat[i].endWord >= currentUpto) {
+      return Math.max(-1, ayat[i].startWord - 1);
+    }
+  }
+  for (let i = ayat.length - 1; i >= 0; i--) {
+    if (ayat[i].endWord < currentUpto) return Math.max(-1, ayat[i].startWord - 1);
+  }
+  return -1;
 }

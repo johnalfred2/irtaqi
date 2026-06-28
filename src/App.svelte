@@ -3,11 +3,10 @@
   import MushafPage from './components/MushafPage.svelte';
   import PageNav from './components/PageNav.svelte';
   import DownloadScreen from './components/DownloadScreen.svelte';
-  import { getNextAyahEnd, getPrevAyahStart } from './lib/layout.js';
+  import { getNextAyahEnd, getPrevAyahStart, fetchPageSVG } from './lib/svgApi.js';
   import { getSurahList } from './lib/surahs.js';
   import { checkDownloaded } from './lib/downloadManager.js';
-
-  const TOTAL_PAGES = 604;
+  import { TOTAL_PAGES } from './lib/constants.js';
   const SWIPE_THRESHOLD = 50;
   const TAP_MAX_DIST = 10;
   const TAP_MAX_TIME = 300;
@@ -26,6 +25,21 @@
   let pendingMode = 'restore';
   let isTouchDevice = $state(false);
   let navOverlayMode = $state(null);
+  let navOverlayEl = $state(null);
+  let shortcutOverlayEl = $state(null);
+
+  $effect(() => {
+    if (navOverlayMode && navOverlayEl) {
+      const first = navOverlayEl.querySelector('button');
+      if (first) first.focus();
+    }
+  });
+
+  $effect(() => {
+    if (showOverlay && shortcutOverlayEl) {
+      shortcutOverlayEl.focus();
+    }
+  });
 
   const pageStates = new Map();
 
@@ -93,6 +107,16 @@
     }
     if (eyeOpen) activeRevealed = parsed.totalWords - 1;
     loadingPage = false;
+    preloadAdjacent(pageNum);
+  }
+
+  let preloadTimer;
+  function preloadAdjacent(page) {
+    clearTimeout(preloadTimer);
+    preloadTimer = setTimeout(() => {
+      if (page > 1) fetchPageSVG(page - 1).catch(() => {});
+      if (page < TOTAL_PAGES) fetchPageSVG(page + 1).catch(() => {});
+    }, 500);
   }
 
   onDestroy(() => {
@@ -300,6 +324,21 @@
     navOverlayMode = null;
   }
 
+  function trapFocus(e, container) {
+    if (e.key !== 'Tab') return;
+    const focusable = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusable.length < 2) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
   function handleToggleAll() {
     if (!activeLayout) return;
     eyeOpen = !eyeOpen;
@@ -417,7 +456,8 @@
 
   {#if navOverlayMode}
     <div class="overlay-backdrop" onclick={closeNavOverlay} onkeydown={(e) => e.key === 'Escape' && closeNavOverlay()} role="presentation">
-      <div class="overlay-card overlay-card-nav" tabindex="0" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+      <!-- svelte-ignore a11y_autofocus -->
+      <div class="overlay-card overlay-card-nav" tabindex="-1" bind:this={navOverlayEl} onclick={(e) => e.stopPropagation()} onkeydown={(e) => { e.key === 'Tab' && trapFocus(e, e.currentTarget); e.stopPropagation(); }} role="dialog" aria-modal="true">
         <h2>
           {#if navOverlayMode === 'surah'}Select Surah
           {:else if navOverlayMode === 'juz'}Select Juz
@@ -452,7 +492,7 @@
 
   {#if showOverlay}
     <div class="overlay-backdrop" onclick={() => (showOverlay = false)} onkeydown={(e) => e.key === 'Escape' && (showOverlay = false)} role="presentation">
-      <div class="overlay-card" tabindex="-1" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+      <div class="overlay-card" tabindex="-1" bind:this={shortcutOverlayEl} onclick={(e) => e.stopPropagation()} onkeydown={(e) => { e.key === 'Tab' && trapFocus(e, e.currentTarget); e.stopPropagation(); }} role="dialog" aria-modal="true">
         <h2>Keyboard Shortcuts</h2>
         <table class="shortcut-table">
           <tbody>
