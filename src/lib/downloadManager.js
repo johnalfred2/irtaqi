@@ -18,9 +18,11 @@ export async function startDownload(onProgress, onError) {
   }
 
   const queue = [];
-  for (let i = 1; i <= TOTAL_PAGES; i++) {
-    queue.push(i);
-  }
+  for (let i = 1; i <= TOTAL_PAGES; i++) queue.push(i);
+
+  const retries = new Map();
+  const MAX_RETRIES = 3;
+  let fatalCount = 0;
 
   async function worker() {
     while (queue.length > 0) {
@@ -37,12 +39,22 @@ export async function startDownload(onProgress, onError) {
         completed++;
         report();
       } catch (err) {
-        queue.push(num);
-        if (onError) onError(num, err.message);
+        const attempt = (retries.get(num) || 0) + 1;
+        if (attempt <= MAX_RETRIES) {
+          retries.set(num, attempt);
+          queue.push(num);
+        } else {
+          fatalCount++;
+          if (onError) onError(num, `Failed after ${MAX_RETRIES} attempts: ${err.message}`);
+        }
       }
     }
   }
 
   const workers = Array.from({ length: PARALLEL }, () => worker());
   await Promise.all(workers);
+
+  if (fatalCount > 0) {
+    throw new Error(`Failed to download ${fatalCount} page(s)`);
+  }
 }

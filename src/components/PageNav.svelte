@@ -1,7 +1,10 @@
 <script>
+  import { findSurahByPage } from '../lib/surahs.js';
+
   let { currentPage = 1, totalPages = 604, surahs = [], onPageChange, eyeOpen = false, onToggleAll, darkTheme = true, onToggleTheme } = $props();
 
-  let currentJuz = $derived(Math.floor((currentPage - 1) / 20) + 1);
+  let currentJuz = $derived(Math.min(30, Math.floor((currentPage - 1) / 20) + 1));
+  let currentSurah = $derived(findSurahByPage(currentPage).number);
 
   function prevPage() {
     if (currentPage > 1) onPageChange(currentPage - 1);
@@ -38,7 +41,7 @@
 
 <div class="page-nav">
   <div class="nav-selectors">
-    <select class="nav-select" onchange={goToSurah}>
+    <select class="nav-select" value={currentSurah} onchange={goToSurah}>
       <option value="">Surah...</option>
       {#each surahs as s}
         <option value={s.number}>{s.number}. {s.name}</option>

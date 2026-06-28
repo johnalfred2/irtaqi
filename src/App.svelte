@@ -29,7 +29,7 @@
 
   const pageStates = new Map();
 
-  let activeJuz = $derived(Math.floor((activePage - 1) / 20) + 1);
+  let activeJuz = $derived(Math.min(30, Math.floor((activePage - 1) / 20) + 1));
 
   let pageContainerEl = $state(null);
   let touchStart = null;
@@ -99,7 +99,7 @@
     window.removeEventListener('keydown', handleKey);
     document.removeEventListener('visibilitychange', handleVisibility);
     releaseWakeLock();
-    persistState();
+    flushState();
   });
 
   async function acquireWakeLock() {
@@ -117,16 +117,18 @@
   }
 
   let persistTimer = null;
+  function flushState() {
+    if (persistTimer) { clearTimeout(persistTimer); persistTimer = null; }
+    localStorage.setItem('quran-last-page', String(activePage));
+    localStorage.setItem('quran-eye-open', String(eyeOpen));
+    localStorage.setItem('quran-dark-theme', String(darkTheme));
+    const obj = {};
+    for (const [k, v] of pageStates) obj[k] = v;
+    localStorage.setItem('quran-page-states', JSON.stringify(obj));
+  }
   function persistState() {
     if (persistTimer) clearTimeout(persistTimer);
-    persistTimer = setTimeout(() => {
-      localStorage.setItem('quran-last-page', String(activePage));
-      localStorage.setItem('quran-eye-open', String(eyeOpen));
-      localStorage.setItem('quran-dark-theme', String(darkTheme));
-      const obj = {};
-      for (const [k, v] of pageStates) obj[k] = v;
-      localStorage.setItem('quran-page-states', JSON.stringify(obj));
-    }, 300);
+    persistTimer = setTimeout(flushState, 300);
   }
 
   function handleKey(e) {
@@ -157,7 +159,6 @@
       e.preventDefault();
       eyeOpen = false;
       activeRevealed = -1;
-      pageStates.clear();
       persistState();
     } else if (e.key === 's') {
       e.preventDefault();
@@ -306,7 +307,6 @@
       activeRevealed = activeLayout.totalWords - 1;
     } else {
       activeRevealed = -1;
-      pageStates.clear();
     }
     persistState();
   }

@@ -31,7 +31,9 @@
       const svgText = await fetchPageSVG(num);
       if (loadingPage !== num) return;
       if (!svgContainer) return;
-      svgContainer.innerHTML = svgText;
+      const doc = new DOMParser().parseFromString(svgText, 'image/svg+xml');
+      doc.querySelectorAll('script, [onload], [onerror], [onclick], [onfocus], [onblur], [oninput], [onchange]').forEach(el => el.remove());
+      svgContainer.innerHTML = new XMLSerializer().serializeToString(doc.documentElement);
       requestAnimationFrame(() => {
         cropToContent(svgContainer);
         fitSVG(svgContainer);
