@@ -3,9 +3,9 @@ Categories:
   - Religion
 License: GPL-3.0-or-later
 AuthorName: John Alfred
-SourceCode: https://github.com/johnalfred2/irtaqi
-IssueTracker: https://github.com/johnalfred2/irtaqi/issues
-WebSite: https://johnalfred2.github.io/irtaqi/
+SourceCode: https://codeberg.org/johnalfred2/Irtaqi
+IssueTracker: https://codeberg.org/johnalfred2/Irtaqi/issues
+WebSite: https://codeberg.org/johnalfred2/Irtaqi
 
 Name: Irtaqi
 Summary: Quran memorization with word-by-word reveal
@@ -20,7 +20,7 @@ Description: |
   - Page, surah, and juz navigation
   - Fully offline after initial download (Capacitor Android)
 
-Repo: https://github.com/johnalfred2/irtaqi
+Repo: https://codeberg.org/johnalfred2/Irtaqi
 RepoType: git
 
 Builds:
@@ -30,7 +30,7 @@ Builds:
     subdir: quran-site
     init:
       - npm install
-    output: android/app/build/outputs/apk/release/app-release.apk
+    output: android/app/build/outputs/apk/release/app-release-unsigned.apk
     build:
       - npm run build
       - npx cap sync android

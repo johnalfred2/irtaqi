@@ -1,5 +1,9 @@
 # Irtaqi
 
+<p align="center">
+  <img src="public/icon-512.png" alt="Irtaqi" width="128" height="128">
+</p>
+
 A free, open-source, private Quran memorization app that displays pixel-exact Madani Mushaf pages and lets you hide/reveal words one by one.
 
 ## The Vision & Meaning
@@ -50,12 +54,12 @@ These are future directions, not commitments — the core app is already usable 
 
 ## Install
 
-Download the latest APK from the [Releases page](https://github.com/johnalfred2/irtaqi/releases). On your Android device, open the downloaded file and allow installation from unknown sources.
+Download the latest APK from the [Releases page](https://codeberg.org/johnalfred2/Irtaqi/releases/latest). On your Android device, open the downloaded file and allow installation from unknown sources.
 
 ## Developer Setup
 
 ```bash
-git clone git@github.com:johnalfred2/irtaqi.git
+git clone git@codeberg.org:johnalfred2/Irtaqi.git
 cd irtaqi
 npm install
 npm run dev        # dev server at http://localhost:5173
