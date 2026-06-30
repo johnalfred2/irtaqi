@@ -68,8 +68,8 @@ html, body {
 }
 
 @media (display-mode: browser) {
-  .page-container {
-    padding: 4px 28px;
+  .svg-container svg {
+    overflow: visible;
   }
 }
 
