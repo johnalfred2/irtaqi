@@ -67,6 +67,12 @@ html, body {
   min-height: 0;
 }
 
+@media (display-mode: browser) {
+  .page-container {
+    padding: 4px 28px;
+  }
+}
+
 .mushaf-page {
   width: 100%;
   height: 100%;
