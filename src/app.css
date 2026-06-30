@@ -73,8 +73,8 @@ html, body {
   }
   .svg-container svg {
     overflow: visible;
-    max-width: 92% !important;
-    max-height: 92% !important;
+    max-width: 85% !important;
+    max-height: 85% !important;
   }
 }
 
