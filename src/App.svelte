@@ -113,6 +113,8 @@
 
     isTouchDevice = matchMedia('(hover: none) and (pointer: coarse)').matches || 'ontouchstart' in window;
 
+    document.documentElement.setAttribute('dir', 'ltr');
+
     const isNative = typeof window.Capacitor?.isNativePlatform === 'function' && window.Capacitor.isNativePlatform();
     if (isNative) {
       checkDownloaded().then((ok) => { downloadReady = ok; pagesDownloaded = ok ? TOTAL_PAGES : 0; });
@@ -690,6 +692,7 @@
           </button>
         </div>
 
+        <button class="nav-menu-go nav-menu-go-danger" onclick={() => location.reload()}>Reload Page</button>
         <button class="nav-menu-go nav-menu-go-secondary" onclick={closeSettings}>Close</button>
       </div>
     </div>
