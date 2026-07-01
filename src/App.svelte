@@ -753,7 +753,7 @@
     flex: 1;
     overflow: hidden;
     min-height: 0;
-    touch-action: manipulation;
+    touch-action: none;
   }
 
   .global-error {
