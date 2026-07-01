@@ -50,26 +50,10 @@
     }
   });
 
-  $effect(() => {
-    if (activeLayout) {
-      requestAnimationFrame(() => {
-        const svg = document.querySelector('.svg-container svg');
-        const stack = document.querySelector('.page-stack');
-        if (!svg || !stack) return;
-        const svgRect = svg.getBoundingClientRect();
-        const stackRect = stack.getBoundingClientRect();
-        overlayTop = (svgRect.top - stackRect.top) * 2 / 3;
-        overlayBottom = (stackRect.bottom - svgRect.bottom) * 2 / 3;
-      });
-    }
-  });
-
   const pageStates = new Map();
 
   let activeJuz = $derived(Math.min(30, Math.floor((activePage - 1) / 20) + 1));
   let currentSurah = $derived(findSurahByPage(activePage));
-  let overlayTop = $state(0);
-  let overlayBottom = $state(0);
 
   let pageContainerEl = $state(null);
   let touchStart = null;
@@ -527,6 +511,19 @@
     <div class="global-error">{errorMsg}</div>
   {/if}
 
+  <header class="top-bar">
+    <span class="top-bar-left">{currentSurah.name}</span>
+    <span class="top-bar-right">
+      <span class="top-bar-juz">Juz {activeJuz}</span>
+      <button class="top-bar-btn" onclick={openSettings} title="Settings">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </span>
+  </header>
+
   <div
     class="page-container"
     bind:this={pageContainerEl}
@@ -543,13 +540,56 @@
           <MushafPage pageNumber={activePage + 1} revealedUpto={rightPageRevealed} onLoaded={onRightPageLoaded} />
         {/if}
       </div>
-      <div class="mushaf-header" style="top: {overlayTop}px">
-        <span class="mushaf-header-left">{currentSurah.name}</span>
-        <span class="mushaf-header-right">Juz {activeJuz}</span>
-      </div>
-      <div class="mushaf-footer" style="bottom: {overlayBottom}px">{activePage}</div>
     </div>
   </div>
+
+  {#if isTouchDevice}
+    <footer class="bottom-bar">
+      <div class="bottom-toggles">
+        <button class="bottom-btn" onclick={openNavMenu} title="Open navigation">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor"/>
+          </svg>
+        </button>
+        <button class="bottom-btn" onclick={handleToggleAll} title={eyeOpen ? 'Hide all' : 'Show all'}>
+          {#if eyeOpen}
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          {:else}
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+              <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+            </svg>
+          {/if}
+        </button>
+        <button class="bottom-btn" onclick={handleToggleTheme} title={darkTheme ? 'Light mode' : 'Dark mode'}>
+          {#if darkTheme}
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+          {:else}
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          {/if}
+        </button>
+      </div>
+      <div class="bottom-hints">Tap left/right to step &middot; long-press for ayah &middot; swipe to change page</div>
+    </footer>
+  {/if}
 
   {#if !isTouchDevice}
     <PageNav
@@ -573,62 +613,6 @@
       <span><kbd>?</kbd> all shortcuts</span>
     </div>
   {/if}
-
-  {#if isTouchDevice}
-    <div class="floating-toggles">
-      <button class="float-btn" onclick={openNavMenu} title="Open navigation">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor"/>
-        </svg>
-      </button>
-      <button class="float-btn" onclick={handleToggleAll} title={eyeOpen ? 'Hide all' : 'Show all'}>
-        {#if eyeOpen}
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
-        {:else}
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-            <line x1="1" y1="1" x2="23" y2="23"/>
-            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
-          </svg>
-        {/if}
-      </button>
-      <button class="float-btn" onclick={handleToggleTheme} title={darkTheme ? 'Light mode' : 'Dark mode'}>
-        {#if darkTheme}
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-        {:else}
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        {/if}
-      </button>
-    </div>
-  {/if}
-
-  <div class="mobile-touch-hint">
-    Tap left/right to step &middot; long-press for ayah &middot; swipe to change page
-  </div>
-
-  <button class="settings-btn" onclick={openSettings} title="Settings">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-    </svg>
-  </button>
 
   {#if showNavMenu}
     <div class="nav-menu-backdrop" onclick={closeNavMenu} onkeydown={(e) => e.key === 'Escape' && closeNavMenu()} role="presentation">
