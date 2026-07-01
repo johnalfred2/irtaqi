@@ -113,7 +113,7 @@ html, body {
   right: 0;
   display: flex;
   justify-content: space-between;
-  padding: 6px 12px;
+  padding: 3px 12px;
   font-size: 12px;
   color: var(--svg-fill-muted);
   pointer-events: none;
@@ -126,7 +126,7 @@ html, body {
   left: 0;
   right: 0;
   text-align: center;
-  padding: 4px;
+  padding: 2px;
   font-size: 11px;
   color: var(--svg-fill-muted);
   pointer-events: none;

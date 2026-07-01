@@ -476,7 +476,7 @@
     <div class="page-stack">
       <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} />
       <div class="mushaf-header">
-        <span class="mushaf-header-left">{currentSurah.number}. {currentSurah.name}</span>
+        <span class="mushaf-header-left">{currentSurah.name}</span>
         <span class="mushaf-header-right">Juz {activeJuz}</span>
       </div>
       <div class="mushaf-footer">{currentSurah.number}</div>
