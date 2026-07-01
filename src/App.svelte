@@ -55,8 +55,8 @@
         if (!svg || !stack) return;
         const svgRect = svg.getBoundingClientRect();
         const stackRect = stack.getBoundingClientRect();
-        overlayTop = svgRect.top - stackRect.top;
-        overlayBottom = stackRect.bottom - svgRect.bottom;
+        overlayTop = (svgRect.top - stackRect.top) * 2 / 3;
+        overlayBottom = (stackRect.bottom - svgRect.bottom) * 2 / 3;
       });
     }
   });
