@@ -32,9 +32,6 @@
   let deferredPrompt = $state(null);
   let showInstallBanner = $state(false);
   let showUpdateBanner = $state(false);
-  let viewportWidth = $state(800);
-  let rightPageRevealed = $state(-1);
-  let twoPageMode = $derived(viewportWidth >= 1024);
   let isDownloading = $state(false);
   let downloadProgress = $state(0);
   let pagesDownloaded = $state(0);
@@ -126,9 +123,6 @@
         hadController = true;
       });
     }
-
-    viewportWidth = window.innerWidth;
-    window.addEventListener('resize', onResize);
   });
 
   function onDownloadComplete() {
@@ -150,28 +144,18 @@
     preloadAdjacent(pageNum);
   }
 
-  function onRightPageLoaded(parsed, pageNum) {
-    if (pageNum !== activePage + 1) return;
-    rightPageRevealed = eyeOpen ? parsed.totalWords - 1 : (pageStates.get(pageNum) ?? -1);
-  }
-
   let preloadTimer;
   function preloadAdjacent(page) {
     clearTimeout(preloadTimer);
     preloadTimer = setTimeout(() => {
-      const range = twoPageMode ? 4 : 2;
-      for (let p = page - range; p <= page + range; p++) {
-        if (p >= 1 && p <= TOTAL_PAGES && p !== page) {
-          fetchPageSVG(p).catch(() => {});
-        }
-      }
+      if (page > 1) fetchPageSVG(page - 1).catch(() => {});
+      if (page < TOTAL_PAGES) fetchPageSVG(page + 1).catch(() => {});
     }, 500);
   }
 
   onDestroy(() => {
     window.removeEventListener('keydown', handleKey);
     document.removeEventListener('visibilitychange', handleVisibility);
-    window.removeEventListener('resize', onResize);
     releaseWakeLock();
     flushState();
   });
@@ -188,10 +172,6 @@
 
   function handleVisibility() {
     if (document.visibilityState === 'visible') acquireWakeLock();
-  }
-
-  function onResize() {
-    viewportWidth = window.innerWidth;
   }
 
   let persistTimer = null;
@@ -229,10 +209,10 @@
       if (shift) hidePrevAyah(); else hidePrevWord();
     } else if (e.key === 'n' || e.key === 'PageDown') {
       e.preventDefault();
-      nextPage();
+      goToPage(activePage + 1);
     } else if (e.key === 'p' || e.key === 'PageUp') {
       e.preventDefault();
-      prevPage();
+      goToPage(Math.max(1, activePage - 1));
     } else if (e.key === 'h') {
       e.preventDefault();
       eyeOpen = false;
@@ -303,8 +283,8 @@
     }
 
     if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
-      if (dx > 0) nextPage();
-      else prevPage();
+      if (dx > 0) goToPage(activePage + 1);
+      else goToPage(Math.max(1, activePage - 1));
     } else if (!touchStart.moved && elapsed < TAP_MAX_TIME) {
       const half = window.innerWidth / 2;
       if (touchStart.x < half) revealNextWord();
@@ -317,7 +297,7 @@
   function revealNextWord() {
     if (!activeLayout) return;
     if (activeRevealed >= activeLayout.totalWords - 1) {
-      if (activePage < TOTAL_PAGES) nextPage('fresh');
+      if (activePage < TOTAL_PAGES) goToPage(activePage + 1, 'fresh');
       return;
     }
     activeRevealed++;
@@ -333,7 +313,7 @@
       if (!eyeOpen) pageStates.set(activePage, activeRevealed);
       persistState();
     } else if (activePage < TOTAL_PAGES) {
-      nextPage('fresh');
+      goToPage(activePage + 1, 'fresh');
     }
   }
 
@@ -343,14 +323,14 @@
       if (!eyeOpen) pageStates.set(activePage, activeRevealed);
       persistState();
     } else if (activePage > 1) {
-      prevPage('full');
+      goToPage(activePage - 1, 'full');
     }
   }
 
   function hidePrevAyah() {
     if (!activeLayout) return;
     if (activeRevealed < 0) {
-      if (activePage > 1) prevPage('full');
+      if (activePage > 1) goToPage(activePage - 1, 'full');
       return;
     }
     activeRevealed = getPrevAyahStart(activeLayout.ayat, activeRevealed);
@@ -473,30 +453,10 @@
       pageStates.set(activePage, activeRevealed);
       persistState();
     }
-    rightPageRevealed = -1;
     pendingMode = mode;
     activeLayout = null;
     loadingPage = true;
     activePage = target;
-  }
-
-  function nextPage(mode) {
-    const step = twoPageMode ? 2 : 1;
-    goToPage(Math.min(TOTAL_PAGES, activePage + step), mode);
-  }
-
-  function prevPage(mode) {
-    const step = twoPageMode ? 2 : 1;
-    goToPage(Math.max(1, activePage - step), mode);
-  }
-
-  function handlePageChange(page) {
-    const diff = page - activePage;
-    if (twoPageMode && Math.abs(diff) === 1) {
-      goToPage(activePage + (diff > 0 ? 2 : -2));
-    } else {
-      goToPage(page);
-    }
   }
 </script>
 
@@ -530,12 +490,7 @@
     ontouchend={onTouchEnd}
   >
     <div class="page-stack">
-      <div class="two-page-layout" class:two-page-active={twoPageMode}>
-        <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} />
-        {#if twoPageMode && activePage < TOTAL_PAGES}
-          <MushafPage pageNumber={activePage + 1} revealedUpto={rightPageRevealed} onLoaded={onRightPageLoaded} />
-        {/if}
-      </div>
+      <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} />
     </div>
   </div>
 
@@ -591,7 +546,7 @@
       currentPage={activePage}
       totalPages={TOTAL_PAGES}
       {surahs}
-      onPageChange={handlePageChange}
+      onPageChange={goToPage}
       {eyeOpen}
       {darkTheme}
       onToggleAll={handleToggleAll}
