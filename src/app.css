@@ -109,6 +109,7 @@ html, body {
 .two-page-layout {
   width: 100%;
   height: 100%;
+  direction: ltr;
 }
 
 .two-page-layout.two-page-active {
@@ -124,12 +125,16 @@ html, body {
   left: 0;
   right: 0;
   display: flex;
-  justify-content: space-between;
+  direction: ltr;
   padding: 6px 12px;
   font-size: 12px;
   color: var(--svg-fill-muted);
   pointer-events: none;
   z-index: 1;
+}
+
+.mushaf-header-right {
+  margin-left: auto;
 }
 
 .mushaf-footer {
