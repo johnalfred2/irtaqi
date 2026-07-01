@@ -31,6 +31,7 @@
   let showSettings = $state(false);
   let deferredPrompt = $state(null);
   let showInstallBanner = $state(false);
+  let showUpdateBanner = $state(false);
   let isDownloading = $state(false);
   let downloadProgress = $state(0);
   let pagesDownloaded = $state(0);
@@ -110,6 +111,14 @@
       deferredPrompt = null;
       localStorage.removeItem('quran-install-dismissed');
     });
+
+    if ('serviceWorker' in navigator) {
+      let hadController = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (hadController) showUpdateBanner = true;
+        hadController = true;
+      });
+    }
   });
 
   function onDownloadComplete() {
@@ -626,6 +635,16 @@
       <div class="install-banner-actions">
         <button class="install-btn install-btn-primary" onclick={handleInstall}>Install</button>
         <button class="install-btn install-btn-dismiss" onclick={dismissInstallBanner}>Not now</button>
+      </div>
+    </div>
+  {/if}
+
+  {#if showUpdateBanner}
+    <div class="install-banner">
+      <span class="install-banner-text">New version available</span>
+      <div class="install-banner-actions">
+        <button class="install-btn install-btn-primary" onclick={() => location.reload()}>Reload</button>
+        <button class="install-btn install-btn-dismiss" onclick={() => showUpdateBanner = false}>Later</button>
       </div>
     </div>
   {/if}
