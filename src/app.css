@@ -137,7 +137,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.25rem;
   background: var(--bg);
   border-bottom: 1px solid var(--border-secondary);
   flex-shrink: 0;
@@ -146,7 +146,7 @@ html, body {
 }
 
 .top-bar-left {
-  font-size: clamp(0.75rem, 2vw, 0.95rem);
+  font-size: clamp(0.85rem, 2.5vw, 1.1rem);
   font-weight: 600;
   color: var(--text);
 }
@@ -158,13 +158,13 @@ html, body {
 }
 
 .top-bar-juz {
-  font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+  font-size: clamp(0.75rem, 2vw, 0.95rem);
   color: var(--text-secondary);
 }
 
 .top-bar-btn {
-  width: clamp(2rem, 5vw, 2.5rem);
-  height: clamp(2rem, 5vw, 2.5rem);
+  width: clamp(2.25rem, 5.5vw, 2.75rem);
+  height: clamp(2.25rem, 5.5vw, 2.75rem);
   border-radius: 50%;
   border: none;
   background: rgba(128, 128, 128, 0.12);

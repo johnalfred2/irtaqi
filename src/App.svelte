@@ -543,8 +543,7 @@
     </div>
   </div>
 
-  {#if isTouchDevice}
-    <footer class="bottom-bar">
+  <footer class="bottom-bar">
       <div class="bottom-toggles">
         <button class="bottom-btn" onclick={openNavMenu} title="Open navigation">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -589,7 +588,6 @@
       </div>
       <div class="bottom-hints">Tap left/right to step &middot; long-press for ayah &middot; swipe to change page</div>
     </footer>
-  {/if}
 
   {#if !isTouchDevice}
     <PageNav
