@@ -547,7 +547,7 @@
         <span class="mushaf-header-left">{currentSurah.name}</span>
         <span class="mushaf-header-right">Juz {activeJuz}</span>
       </div>
-      <div class="mushaf-footer" style="bottom: {overlayBottom}px">{currentSurah.number}</div>
+      <div class="mushaf-footer" style="bottom: {overlayBottom}px">{activePage}</div>
     </div>
   </div>
 
