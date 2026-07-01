@@ -660,7 +660,7 @@
     flex: 1;
     overflow: hidden;
     min-height: 0;
-    touch-action: pan-y;
+    touch-action: none;
   }
 
   .global-error {

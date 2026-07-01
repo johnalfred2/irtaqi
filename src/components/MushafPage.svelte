@@ -87,7 +87,7 @@
         vy2 = Math.max(vy2, bb.y + bb.height);
       } catch (e) { }
     }
-    const PAD = 20;
+    const PAD = 8;
     svg.setAttribute('viewBox', `${vx1 - PAD} ${vy1 - PAD} ${vx2 - vx1 + PAD * 2} ${vy2 - vy1 + PAD * 2}`);
   }
 

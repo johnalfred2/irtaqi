@@ -111,6 +111,11 @@ html, body {
   touch-action: manipulation;
 }
 
+.svg-container svg {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 .svg-container [id^="md-non-quranic-margin"] {
   display: none;
 }
