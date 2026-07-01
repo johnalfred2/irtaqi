@@ -68,11 +68,7 @@ html, body {
 }
 
 @media (display-mode: browser) {
-  .svg-container {
-    overflow: visible;
-  }
   .svg-container svg {
-    overflow: visible;
     max-width: 88% !important;
     height: auto !important;
   }
@@ -110,9 +106,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
   line-height: 0;
   touch-action: manipulation;
+}
+
+.svg-container svg {
+  overflow: visible;
 }
 
 .svg-container [id^="md-non-quranic-margin"] {
