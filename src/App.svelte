@@ -321,8 +321,8 @@
     }
 
     if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
-      if (dx > 0) prevPage();
-      else nextPage();
+      if (dx > 0) nextPage();
+      else prevPage();
     } else if (!touchStart.moved && elapsed < TAP_MAX_TIME) {
       const half = window.innerWidth / 2;
       if (touchStart.x < half) revealNextWord();
