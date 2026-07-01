@@ -74,7 +74,7 @@ html, body {
   .svg-container svg {
     overflow: visible;
     max-width: 88% !important;
-    max-height: 88% !important;
+    height: auto !important;
   }
 }
 
@@ -639,5 +639,55 @@ html, body {
 
   .shortcut-table {
     font-size: 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  .nav-btn {
+    padding: 12px 28px;
+    font-size: 15px;
+  }
+
+  .nav-btn-eye,
+  .nav-btn-theme,
+  .nav-btn-nav {
+    padding: 10px 14px;
+  }
+
+  .nav-btn-eye svg,
+  .nav-btn-theme svg,
+  .nav-btn-nav svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .nav-select {
+    padding: 10px 14px;
+    font-size: 15px;
+  }
+
+  .float-btn {
+    width: 48px;
+    height: 48px;
+  }
+
+  .float-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .settings-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .settings-btn svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .shortcuts-help {
+    font-size: 13px;
+    gap: 28px;
   }
 }
