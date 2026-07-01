@@ -192,9 +192,6 @@ html, body {
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
-  position: sticky;
-  bottom: 0;
-  z-index: 40;
 }
 
 .bottom-toggles {
