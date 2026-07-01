@@ -47,10 +47,26 @@
     }
   });
 
+  $effect(() => {
+    if (activeLayout) {
+      requestAnimationFrame(() => {
+        const svg = document.querySelector('.svg-container svg');
+        const stack = document.querySelector('.page-stack');
+        if (!svg || !stack) return;
+        const svgRect = svg.getBoundingClientRect();
+        const stackRect = stack.getBoundingClientRect();
+        overlayTop = svgRect.top - stackRect.top;
+        overlayBottom = stackRect.bottom - svgRect.bottom;
+      });
+    }
+  });
+
   const pageStates = new Map();
 
   let activeJuz = $derived(Math.min(30, Math.floor((activePage - 1) / 20) + 1));
   let currentSurah = $derived(findSurahByPage(activePage));
+  let overlayTop = $state(0);
+  let overlayBottom = $state(0);
 
   let pageContainerEl = $state(null);
   let touchStart = null;
@@ -475,11 +491,11 @@
   >
     <div class="page-stack">
       <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} />
-      <div class="mushaf-header">
+      <div class="mushaf-header" style="top: {overlayTop}px">
         <span class="mushaf-header-left">{currentSurah.name}</span>
         <span class="mushaf-header-right">Juz {activeJuz}</span>
       </div>
-      <div class="mushaf-footer">{currentSurah.number}</div>
+      <div class="mushaf-footer" style="bottom: {overlayBottom}px">{currentSurah.number}</div>
     </div>
   </div>
 
