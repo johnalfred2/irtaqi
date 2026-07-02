@@ -542,18 +542,6 @@
     </footer>
 
   {#if !isTouchDevice}
-    <PageNav
-      currentPage={activePage}
-      totalPages={TOTAL_PAGES}
-      {surahs}
-      onPageChange={goToPage}
-      {eyeOpen}
-      {darkTheme}
-      onToggleAll={handleToggleAll}
-      onToggleTheme={handleToggleTheme}
-      onOpenNavMenu={openNavMenu}
-    />
-
     <div class="shortcuts-help">
       <span><kbd>Space</kbd>/<kbd>&larr;</kbd> next word</span>
       <span><kbd>Shift</kbd>+<kbd>Space</kbd> next ayah</span>
