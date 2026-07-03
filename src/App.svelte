@@ -538,19 +538,17 @@
           {/if}
         </button>
       </div>
-      <div class="bottom-hints">Tap left/right to step &middot; long-press for ayah &middot; swipe to change page</div>
+      <div class="bottom-hints">
+        {#if isTouchDevice}
+          Tap left/right to step &middot; long-press for ayah &middot; swipe to change page
+        {:else}
+          <span><kbd>Space</kbd>/<kbd>&larr;</kbd> next word &middot;</span>
+          <span><kbd>Shift</kbd>+<kbd>Space</kbd> next ayah &middot;</span>
+          <span><kbd>h</kbd> hide all &middot; <kbd>s</kbd> show all &middot;</span>
+          <span><kbd>n</kbd>/<kbd>p</kbd> next/prev page</span>
+        {/if}
+      </div>
     </footer>
-
-  {#if !isTouchDevice}
-    <div class="shortcuts-help">
-      <span><kbd>Space</kbd>/<kbd>&larr;</kbd> next word</span>
-      <span><kbd>Shift</kbd>+<kbd>Space</kbd> next ayah</span>
-      <span><kbd>Backspace</kbd>/<kbd>&rarr;</kbd> prev word</span>
-      <span><kbd>h</kbd> hide all &middot; <kbd>s</kbd> show all</span>
-      <span><kbd>n</kbd>/<kbd>p</kbd> next/prev page</span>
-      <span><kbd>?</kbd> all shortcuts</span>
-    </div>
-  {/if}
 
   {#if showNavMenu}
     <div class="nav-menu-backdrop" onclick={closeNavMenu} onkeydown={(e) => e.key === 'Escape' && closeNavMenu()} role="presentation">
