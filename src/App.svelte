@@ -47,12 +47,23 @@
     }
   });
 
+  $effect(() => {
+    activePage;
+    pageAnimating = true;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        pageAnimating = false;
+      });
+    });
+  });
+
   const pageStates = new Map();
 
   let activeJuz = $derived(Math.min(30, Math.floor((activePage - 1) / 20) + 1));
   let currentSurah = $derived(findSurahByPage(activePage));
 
   let pageContainerEl = $state(null);
+  let pageAnimating = $state(false);
   let touchStart = null;
   let longPressTimer = null;
 
@@ -489,7 +500,7 @@
     ontouchmove={onTouchMove}
     ontouchend={onTouchEnd}
   >
-    <div class="page-stack">
+    <div class="page-stack" class:page-fade-in={pageAnimating}>
       <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} />
     </div>
   </div>
