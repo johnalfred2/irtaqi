@@ -1,13 +1,13 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import MushafPage from './components/MushafPage.svelte';
+  import PageNav from './components/PageNav.svelte';
   import DownloadScreen from './components/DownloadScreen.svelte';
   import { getNextAyahEnd, getPrevAyahStart, fetchPageSVG } from './lib/svgApi.js';
   import { getSurahList, findSurahByPage } from './lib/surahs.js';
   import { checkDownloaded, startDownload } from './lib/downloadManager.js';
   import { clearAllPages, getStoredPageCount } from './lib/storage.js';
   import { TOTAL_PAGES } from './lib/constants.js';
-  import { LANGUAGES, getTranslations } from './lib/i18n.js';
   const SWIPE_THRESHOLD = 50;
   const TAP_MAX_DIST = 10;
   const TAP_MAX_TIME = 300;
@@ -36,8 +36,6 @@
   let downloadProgress = $state(0);
   let pagesDownloaded = $state(0);
   let isDownloaded = $derived(pagesDownloaded >= TOTAL_PAGES);
-  let lang = $state('en');
-  let t = $derived(getTranslations(lang));
 
   let menuSurah = $derived(findSurahByPage(targetPage).number);
   let menuJuz = $derived(Math.min(30, Math.floor((targetPage - 1) / 20) + 1));
@@ -47,11 +45,6 @@
     if (showOverlay && shortcutOverlayEl) {
       shortcutOverlayEl.focus();
     }
-  });
-
-  $effect(() => {
-    const dir = LANGUAGES.find(l => l.code === lang)?.dir || 'ltr';
-    document.documentElement.setAttribute('dir', dir);
   });
 
   const pageStates = new Map();
@@ -89,8 +82,6 @@
     eyeOpen = localStorage.getItem('quran-eye-open') === 'true';
     darkTheme = localStorage.getItem('quran-dark-theme') !== 'false';
     document.documentElement.classList.toggle('light', !darkTheme);
-    const savedLang = localStorage.getItem('quran-lang');
-    if (savedLang) lang = savedLang;
     const themeMeta = document.querySelector('meta[name="theme-color"]');
     if (themeMeta) themeMeta.setAttribute('content', darkTheme ? '#000000' : '#f5f5f5');
 
@@ -189,7 +180,6 @@
     localStorage.setItem('quran-last-page', String(activePage));
     localStorage.setItem('quran-eye-open', String(eyeOpen));
     localStorage.setItem('quran-dark-theme', String(darkTheme));
-    localStorage.setItem('quran-lang', lang);
     const obj = {};
     for (const [k, v] of pageStates) obj[k] = v;
     localStorage.setItem('quran-page-states', JSON.stringify(obj));
@@ -471,7 +461,7 @@
 </script>
 
 {#if downloadReady === false}
-  <DownloadScreen onComplete={onDownloadComplete} {t} />
+  <DownloadScreen onComplete={onDownloadComplete} />
 {:else if downloadReady === true}
   {#if errorMsg}
     <div class="global-error">{errorMsg}</div>
@@ -480,8 +470,8 @@
   <header class="top-bar">
     <span class="top-bar-left">{currentSurah.name}</span>
     <span class="top-bar-right">
-      <span class="top-bar-juz">{t.juz} {activeJuz}</span>
-      <button class="top-bar-btn" onclick={openSettings} title={t.settings}>
+      <span class="top-bar-juz">Juz {activeJuz}</span>
+      <button class="top-bar-btn" onclick={openSettings} title="Settings">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"/>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -494,26 +484,26 @@
     class="page-container"
     bind:this={pageContainerEl}
     role="application"
-    aria-label={t.appAriaLabel}
+    aria-label="Quran page. Tap left side to reveal next word, right side to hide. Swipe to change page."
     ontouchstart={onTouchStart}
     ontouchmove={onTouchMove}
     ontouchend={onTouchEnd}
   >
     <div class="page-stack">
-      <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} {t} />
+      <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} />
     </div>
   </div>
 
   <footer class="bottom-bar">
-      <div class="bottom-page">{t.page} {activePage}</div>
+      <div class="bottom-page">Page {activePage}</div>
       <div class="bottom-toggles">
-        <button class="bottom-btn" onclick={openNavMenu} title={t.openNav}>
+        <button class="bottom-btn" onclick={openNavMenu} title="Open navigation">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/>
             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor"/>
           </svg>
         </button>
-        <button class="bottom-btn" onclick={handleToggleAll} title={eyeOpen ? t.hideAll : t.showAll}>
+        <button class="bottom-btn" onclick={handleToggleAll} title={eyeOpen ? 'Hide all' : 'Show all'}>
           {#if eyeOpen}
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -528,7 +518,7 @@
             </svg>
           {/if}
         </button>
-        <button class="bottom-btn" onclick={handleToggleTheme} title={darkTheme ? t.lightMode : t.darkMode}>
+        <button class="bottom-btn" onclick={handleToggleTheme} title={darkTheme ? 'Light mode' : 'Dark mode'}>
           {#if darkTheme}
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"/>
@@ -550,12 +540,12 @@
       </div>
       <div class="bottom-hints">
         {#if isTouchDevice}
-          {t.touchHint}
+          Tap left/right to step &middot; long-press for ayah &middot; swipe to change page
         {:else}
-          <span><kbd>Space</kbd>/<kbd>&larr;</kbd> {t.nextWord} &middot;</span>
-          <span><kbd>Shift</kbd>+<kbd>Space</kbd> {t.nextAyah} &middot;</span>
-          <span><kbd>h</kbd> {t.hideAll} &middot; <kbd>s</kbd> {t.showAll} &middot;</span>
-          <span><kbd>n</kbd>/<kbd>p</kbd> {t.nextPage}/{t.prevPage}</span>
+          <span><kbd>Space</kbd>/<kbd>&larr;</kbd> next word &middot;</span>
+          <span><kbd>Shift</kbd>+<kbd>Space</kbd> next ayah &middot;</span>
+          <span><kbd>h</kbd> hide all &middot; <kbd>s</kbd> show all &middot;</span>
+          <span><kbd>n</kbd>/<kbd>p</kbd> next/prev page</span>
         {/if}
       </div>
     </footer>
@@ -565,31 +555,30 @@
       <!-- svelte-ignore a11y_click_events_have_key_events -->
       <div class="nav-menu" tabindex="-1" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
         <div class="nav-menu-field">
-          <span class="nav-menu-label">{t.surah}</span>
+          <span class="nav-menu-label">Surah</span>
           <select class="nav-menu-select" value={menuSurah} onchange={onMenuSurahChange}>
-            <option value="">{t.surahPlaceholder}</option>
             {#each surahs as s}
-              <option value={s.number}>{s.number}. {lang === 'ar' ? s.arabic : s.name}</option>
+              <option value={s.number}>{s.number}. {s.name}</option>
             {/each}
           </select>
         </div>
         <div class="nav-menu-field">
-          <span class="nav-menu-label">{t.juz}</span>
+          <span class="nav-menu-label">Juz</span>
           <select class="nav-menu-select" value={menuJuz} onchange={onMenuJuzChange}>
             {#each Array.from({ length: 30 }, (_, i) => i + 1) as j}
-              <option value={j}>{t.juz} {j}</option>
+              <option value={j}>Juz {j}</option>
             {/each}
           </select>
         </div>
         <div class="nav-menu-field">
-          <span class="nav-menu-label">{t.page}</span>
+          <span class="nav-menu-label">Page</span>
           <select class="nav-menu-select" value={menuPage} onchange={onMenuPageChange}>
             {#each Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1) as p}
-              <option value={p}>{t.page} {p}</option>
+              <option value={p}>Page {p}</option>
             {/each}
           </select>
         </div>
-        <button class="nav-menu-go" onclick={goToNavTarget}>{t.go}</button>
+        <button class="nav-menu-go" onclick={goToNavTarget}>Go</button>
       </div>
     </div>
   {/if}
@@ -598,61 +587,52 @@
     <div class="nav-menu-backdrop" onclick={closeSettings} onkeydown={(e) => e.key === 'Escape' && closeSettings()} role="presentation">
       <!-- svelte-ignore a11y_click_events_have_key_events -->
       <div class="nav-menu" tabindex="-1" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
-        <h2 class="nav-menu-heading">{t.settings}</h2>
+        <h2 class="nav-menu-heading">Settings</h2>
 
         <div class="settings-section">
-          <p class="settings-section-title">{t.offlineStorage}</p>
+          <p class="settings-section-title">Offline Storage</p>
           {#if isDownloading}
             <div class="ds-bar-track">
               <div class="ds-bar-fill" style="width: {downloadProgress / TOTAL_PAGES * 100}%"></div>
             </div>
-            <p class="settings-status">{downloadProgress} / {TOTAL_PAGES} {t.pages}</p>
+            <p class="settings-status">{downloadProgress} / {TOTAL_PAGES} pages</p>
           {:else if isDownloaded}
-            <p class="settings-status settings-ok">{t.allCached}</p>
-            <button class="nav-menu-go nav-menu-go-danger" onclick={deleteAllPages}>{t.deleteDownloaded}</button>
+            <p class="settings-status settings-ok">All 604 pages cached</p>
+            <button class="nav-menu-go nav-menu-go-danger" onclick={deleteAllPages}>Delete Downloaded Pages</button>
           {:else}
-            <button class="nav-menu-go" onclick={startDownloadAll}>{t.downloadAll}</button>
-            <p class="settings-status">{t.pagesWillBeCached}</p>
+            <button class="nav-menu-go" onclick={startDownloadAll}>Download All 604 Pages</button>
+            <p class="settings-status">Pages will be cached for offline reading</p>
           {/if}
         </div>
 
         <div class="settings-section">
-          <p class="settings-section-title">{t.appearance}</p>
+          <p class="settings-section-title">Appearance</p>
           <button class="nav-menu-go nav-menu-go-secondary" onclick={handleToggleTheme}>
-            {t.themeToggle.replace('{mode}', darkTheme ? t.darkMode : t.lightMode)}
+            Switch to {darkTheme ? 'Light' : 'Dark'} Mode
           </button>
         </div>
 
-        <div class="settings-section">
-          <p class="settings-section-title">{t.language}</p>
-          <select class="nav-menu-select" value={lang} onchange={(e) => lang = e.target.value}>
-            {#each LANGUAGES as l}
-              <option value={l.code}>{l.name}</option>
-            {/each}
-          </select>
-        </div>
-
-        <button class="nav-menu-go nav-menu-go-secondary" onclick={closeSettings}>{t.close}</button>
+        <button class="nav-menu-go nav-menu-go-secondary" onclick={closeSettings}>Close</button>
       </div>
     </div>
   {/if}
 
   {#if showInstallBanner}
     <div class="install-banner">
-      <span class="install-banner-text">{t.installText}</span>
+      <span class="install-banner-text">Install Irtaqi for offline access</span>
       <div class="install-banner-actions">
-        <button class="install-btn install-btn-primary" onclick={handleInstall}>{t.install}</button>
-        <button class="install-btn install-btn-dismiss" onclick={dismissInstallBanner}>{t.notNow}</button>
+        <button class="install-btn install-btn-primary" onclick={handleInstall}>Install</button>
+        <button class="install-btn install-btn-dismiss" onclick={dismissInstallBanner}>Not now</button>
       </div>
     </div>
   {/if}
 
   {#if showUpdateBanner}
     <div class="install-banner">
-      <span class="install-banner-text">{t.newVersion}</span>
+      <span class="install-banner-text">New version available</span>
       <div class="install-banner-actions">
-        <button class="install-btn install-btn-primary" onclick={() => location.reload()}>{t.reload}</button>
-        <button class="install-btn install-btn-dismiss" onclick={() => showUpdateBanner = false}>{t.later}</button>
+        <button class="install-btn install-btn-primary" onclick={() => location.reload()}>Reload</button>
+        <button class="install-btn install-btn-dismiss" onclick={() => showUpdateBanner = false}>Later</button>
       </div>
     </div>
   {/if}
@@ -660,26 +640,26 @@
   {#if showOverlay}
     <div class="overlay-backdrop" onclick={() => (showOverlay = false)} onkeydown={(e) => e.key === 'Escape' && (showOverlay = false)} role="presentation">
       <div class="overlay-card" tabindex="-1" bind:this={shortcutOverlayEl} onclick={(e) => e.stopPropagation()} onkeydown={(e) => { e.key === 'Tab' && trapFocus(e, e.currentTarget); e.stopPropagation(); }} role="dialog" aria-modal="true">
-        <h2>{t.keyboardShortcuts}</h2>
+        <h2>Keyboard Shortcuts</h2>
         <table class="shortcut-table">
           <tbody>
-            <tr><td><kbd>Space</kbd> / <kbd>&larr;</kbd></td><td>{t.nextWord}</td></tr>
-            <tr><td><kbd>Shift</kbd> + <kbd>Space</kbd> / <kbd>Shift</kbd> + <kbd>&larr;</kbd></td><td>{t.nextAyah}</td></tr>
-            <tr><td><kbd>Backspace</kbd> / <kbd>&rarr;</kbd></td><td>{t.prevWord}</td></tr>
-            <tr><td><kbd>Shift</kbd> + <kbd>&rarr;</kbd></td><td>{t.prevAyah}</td></tr>
-            <tr><td><kbd>h</kbd></td><td>{t.hideAllAyahs}</td></tr>
-            <tr><td><kbd>s</kbd></td><td>{t.showAllAyahs}</td></tr>
-            <tr><td><kbd>t</kbd></td><td>{t.toggleTheme}</td></tr>
-            <tr><td><kbd>n</kbd> / <kbd>PgDn</kbd></td><td>{t.nextPage}</td></tr>
-            <tr><td><kbd>p</kbd> / <kbd>PgUp</kbd></td><td>{t.prevPage}</td></tr>
-            <tr><td><kbd>Home</kbd></td><td>{t.firstPage}</td></tr>
-            <tr><td><kbd>End</kbd></td><td>{t.lastPage}</td></tr>
-            <tr><td><kbd>?</kbd></td><td>{t.toggleOverlay}</td></tr>
-            <tr><td><kbd>Esc</kbd></td><td>{t.closeOverlay}</td></tr>
+            <tr><td><kbd>Space</kbd> / <kbd>&larr;</kbd></td><td>Next word</td></tr>
+            <tr><td><kbd>Shift</kbd> + <kbd>Space</kbd> / <kbd>Shift</kbd> + <kbd>&larr;</kbd></td><td>Next ayah</td></tr>
+            <tr><td><kbd>Backspace</kbd> / <kbd>&rarr;</kbd></td><td>Previous word</td></tr>
+            <tr><td><kbd>Shift</kbd> + <kbd>&rarr;</kbd></td><td>Previous ayah</td></tr>
+            <tr><td><kbd>h</kbd></td><td>Hide all ayahs</td></tr>
+            <tr><td><kbd>s</kbd></td><td>Show all ayahs</td></tr>
+            <tr><td><kbd>t</kbd></td><td>Toggle dark/light theme</td></tr>
+            <tr><td><kbd>n</kbd> / <kbd>PgDn</kbd></td><td>Next page</td></tr>
+            <tr><td><kbd>p</kbd> / <kbd>PgUp</kbd></td><td>Previous page</td></tr>
+            <tr><td><kbd>Home</kbd></td><td>First page</td></tr>
+            <tr><td><kbd>End</kbd></td><td>Last page</td></tr>
+            <tr><td><kbd>?</kbd></td><td>Toggle this overlay</td></tr>
+            <tr><td><kbd>Esc</kbd></td><td>Close overlay</td></tr>
           </tbody>
         </table>
-        <p class="overlay-touch-note">{t.touchNote}</p>
-        <button class="overlay-close" onclick={() => (showOverlay = false)}>{t.close}</button>
+        <p class="overlay-touch-note">On touch devices: tap left/right side to step, long-press for ayah, swipe horizontally to change page.</p>
+        <button class="overlay-close" onclick={() => (showOverlay = false)}>Close</button>
       </div>
     </div>
   {/if}
