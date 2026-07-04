@@ -1,6 +1,6 @@
 {
   "appId": "com.quran.assistant",
-  "appName": "QuranAssistant",
+  "appName": "Irtaqi",
   "webDir": "dist",
   "server": {
     "allowNavigation": [
