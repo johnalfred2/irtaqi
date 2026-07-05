@@ -4,6 +4,10 @@
   <img src="public/icon-512.png" alt="Irtaqi" width="128" height="128">
 </p>
 
+<p align="center">
+  <img src="public/screenshots/demo-phone.png" alt="Irtaqi screenshot" width="320">
+</p>
+
 A free, open-source, private Quran memorization app that displays pixel-exact Madani Mushaf pages and lets you hide/reveal words one by one.
 
 ## The Vision & Meaning
@@ -33,28 +37,52 @@ Your progress is saved per-page and persists between sessions. Arabic text only 
 - **Manual active recall:** Reveal or hide individual words, ayahs, or the entire page
 - **Pixel-perfect Mushaf:** Rendered from the MushafDatabase ligature-based SVG files — the same artwork used in printed Madani Mushafs
 - **Global toggles:** Show/hide all words, dark/light theme
+- **Settings menu:** Download all pages for offline use, delete cached data, switch theme
+- **Navigation overlay:** Jump to any surah, juz, or page number
+- **Keyboard shortcuts:** Desktop and laptop users can navigate entirely by keyboard
+- **PWA with install banner:** Install as a standalone app on any device
+- **Update notifications:** Automatically notified when a new version is available
 - **Fully offline:** SVGs are downloaded once, then everything works without internet
 - **Minimalist design:** Full-screen SVG, no scrolling, friction-free focus
 - **Privacy-first:** No accounts, no analytics, no data collection
+
+## Install
+
+- **PWA (all devices):** Open [irtaqiapp.com](https://irtaqiapp.com) in your browser, tap "Install" to add it to your home screen
+- **Android APK:** Download the latest APK from the [Releases page](https://github.com/johnalfred2/irtaqi/releases) and allow installation from unknown sources
+- **Google Play:** Coming soon
+
+## Keyboard Shortcuts
+
+| Key | Action |
+|---|---|
+| `Space` / `←` | Next word |
+| `Shift` + `Space` | Next ayah |
+| `Backspace` / `→` | Previous word |
+| `h` | Hide all words |
+| `s` | Show all words |
+| `t` | Toggle dark/light theme |
+| `n` / `PgDn` | Next page |
+| `p` / `PgUp` | Previous page |
+| `Home` | First page |
+| `End` | Last page |
+| `?` | Show all shortcuts |
 
 ## Tech Stack
 
 - **Frontend:** Svelte 5 + Vite
 - **Mobile:** Capacitor (wraps the web app as a native Android APK)
 - **Storage:** Browser Cache API for offline SVGs, localStorage for progress
+- **Deployment:** GitHub Actions → GitHub Pages (auto-deploy on push)
 - **SVG source:** [MushafDatabase Ligature-Based SVG Project](https://github.com/mushafdatabase/MushafDatabase-Ligature-Based-SVG)
 
 ## Roadmap
 
 These are future directions, not commitments — the core app is already usable as-is.
 
-- **Now:** Manual word-by-word reveal, page navigation, per-page progress, eye toggle, dark/light theme
+- **Current:** Manual word-by-word reveal, page navigation, per-page progress, eye toggle, dark/light theme, settings menu, PWA support, keyboard shortcuts, navigation overlay
 - **Next:** Automatic ayah-timed mode for hands-free memorization review sessions
 - **Further out:** Highlighting common mistake patterns, smarter review scheduling
-
-## Install
-
-Download the latest APK from the [Releases page](https://github.com/johnalfred2/irtaqi/releases). On your Android device, open the downloaded file and allow installation from unknown sources.
 
 ## Developer Setup
 
