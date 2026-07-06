@@ -1,11 +1,12 @@
 <script>
   import { startDownload, checkDownloaded } from '../lib/downloadManager.js';
+  import { formatNumber } from '../lib/i18n.js';
 
-  let { onComplete } = $props();
+  let { onComplete, t = null, lang = 'en' } = $props();
 
   let progress = $state(0);
   let total = $state(0);
-  let status = $state('Downloading Quran pages...');
+  let status = $derived(t ? t.downloadQuran : 'Downloading Quran pages...');
   let error = $state('');
   let ready = $state(false);
   let running = $state(false);
@@ -21,7 +22,7 @@
           total = all;
         },
         (page, msg) => {
-          error = `Error on page ${page}: ${msg}`;
+          error = `${t ? t.errorOnPage : 'Error on page'} ${page}: ${msg}`;
         }
       );
       ready = true;
@@ -49,26 +50,27 @@
 <div class="download-screen">
   {#if ready}
     <div class="ds-card">
-      <p class="ds-ready">All pages downloaded successfully.</p>
-      <button class="ds-btn" onclick={enter}>Open Quran</button>
+      <p class="ds-ready">{t ? t.allDownloaded : 'All pages downloaded successfully.'}</p>
+      <button class="ds-btn" onclick={enter}>{t ? t.openQuran : 'Open Quran'}</button>
     </div>
   {:else if !running}
     <div class="ds-card">
-      <h1 class="ds-title">Quran Assistant</h1>
+      <h1 class="ds-title">{t ? t.quranAssistant : 'Quran Assistant'}</h1>
       <p class="ds-desc">
-        Download all 604 Quran pages for offline reading.
-        This one-time download requires an internet connection.
+        {t ? t.downloadDesc1 : 'Download all 604 Quran pages for offline reading.'}
+        <br/>
+        {t ? t.downloadDesc2 : 'This one-time download requires an internet connection.'}
       </p>
-      <button class="ds-btn ds-btn-primary" onclick={begin}>Start Download</button>
+      <button class="ds-btn ds-btn-primary" onclick={begin}>{t ? t.startDownload : 'Start Download'}</button>
     </div>
   {:else}
     <div class="ds-card">
-      <h1 class="ds-title">Downloading...</h1>
+      <h1 class="ds-title">{t ? t.downloadTitle : 'Downloading...'}</h1>
       <div class="ds-bar-track">
         <div class="ds-bar-fill" style="width: {total > 0 ? (progress / total) * 100 : 0}%"></div>
       </div>
       <p class="ds-count">
-        <span class="ds-num">{progress}</span> / <span class="ds-num">{total}</span> pages
+        <span class="ds-num">{formatNumber(progress, lang)}</span> / <span class="ds-num">{formatNumber(total, lang)}</span> {t ? t.pages : 'pages'}
       </p>
       <p class="ds-status">{status}</p>
       {#if error}

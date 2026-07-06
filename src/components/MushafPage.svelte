@@ -1,7 +1,8 @@
 <script>
   import { fetchPageSVG, parsePageSVG } from '../lib/svgApi.js';
+  import { formatNumber } from '../lib/i18n.js';
 
-  let { pageNumber = 1, revealedUpto = -1, onLoaded = null } = $props();
+  let { pageNumber = 1, revealedUpto = -1, onLoaded = null, t = null, lang = 'en' } = $props();
 
   let svgContainer = $state(null);
   let wordIds = $state([]);
@@ -160,9 +161,9 @@
 
 <div class="mushaf-page" class:loading={isLoading}>
   {#if isLoading}
-    <div class="page-loading">Loading page {pageNumber}...</div>
+    <div class="page-loading">{t ? t.loadingPage.replace('{n}', formatNumber(pageNumber, lang)) : `Loading page ${pageNumber}...`}</div>
   {:else if loadError}
-    <div class="page-error">Failed to load page {pageNumber}</div>
+    <div class="page-error">{t ? t.failedToLoad.replace('{n}', formatNumber(pageNumber, lang)) : `Failed to load page ${pageNumber}`}</div>
   {/if}
   <div class="svg-container" bind:this={svgContainer}></div>
 </div>
