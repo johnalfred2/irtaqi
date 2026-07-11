@@ -286,10 +286,18 @@
           else hidePrevAyah();
           if (navigator.vibrate) navigator.vibrate(10);
         };
-        setTimeout(() => {
+        const scheduleNext = () => {
+          if (!longPressActive) return;
+          longPressInterval = setTimeout(() => {
+            if (!longPressActive) return;
+            doLongPress();
+            scheduleNext();
+          }, 800);
+        };
+        longPressInterval = setTimeout(() => {
           if (!longPressActive) return;
           doLongPress();
-          longPressInterval = setInterval(doLongPress, 800);
+          scheduleNext();
         }, 900);
       }
     }, LONG_PRESS_TIME);
