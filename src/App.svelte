@@ -72,10 +72,17 @@
 
   let wakeLock = null;
 
+  function stopLongPress() {
+    activeTouches = 0;
+    if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+    if (longPressInterval) { clearTimeout(longPressInterval); longPressInterval = null; }
+  }
+
   onMount(() => {
     window.addEventListener('keydown', handleKey);
-    window.addEventListener('touchstart', () => { activeTouches++; });
-    window.addEventListener('touchend', () => { activeTouches = Math.max(0, activeTouches - 1); });
+    window.addEventListener('pointerdown', () => { activeTouches++; });
+    window.addEventListener('pointerup', stopLongPress);
+    window.addEventListener('pointercancel', stopLongPress);
 
     const STORAGE_VERSION = 'v2';
     if (localStorage.getItem('quran-storage-version') !== STORAGE_VERSION) {
@@ -178,6 +185,8 @@
 
   onDestroy(() => {
     window.removeEventListener('keydown', handleKey);
+    window.removeEventListener('pointerup', stopLongPress);
+    window.removeEventListener('pointercancel', stopLongPress);
     document.removeEventListener('visibilitychange', handleVisibility);
     releaseWakeLock();
     flushState();
