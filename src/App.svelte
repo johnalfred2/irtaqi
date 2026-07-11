@@ -277,13 +277,18 @@
         touchStart.fired = true;
         if (navigator.vibrate) navigator.vibrate(15);
         longPressActive = true;
-        longPressInterval = setInterval(() => {
-          if (!longPressActive) { clearInterval(longPressInterval); longPressInterval = null; return; }
-          const h = window.innerWidth / 2;
+        const h = window.innerWidth / 2;
+        const doLongPress = () => {
+          if (!longPressActive) return;
           if (touchStart.x < h) revealNextAyah();
           else hidePrevAyah();
           if (navigator.vibrate) navigator.vibrate(10);
-        }, 600);
+        };
+        setTimeout(() => {
+          if (!longPressActive) return;
+          doLongPress();
+          longPressInterval = setInterval(doLongPress, 800);
+        }, 900);
       }
     }, LONG_PRESS_TIME);
   }
@@ -303,6 +308,7 @@
 
   function onTouchEnd(e) {
     if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+    longPressActive = false;
     if (longPressInterval) { clearInterval(longPressInterval); longPressInterval = null; }
     if (!touchStart) return;
     const t = e.changedTouches[0];
