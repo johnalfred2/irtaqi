@@ -68,6 +68,7 @@
   let touchStart = null;
   let longPressTimer = null;
   let longPressInterval = null;
+  let longPressActive = false;
 
   let wakeLock = null;
 
@@ -275,13 +276,14 @@
         else hidePrevAyah();
         touchStart.fired = true;
         if (navigator.vibrate) navigator.vibrate(15);
+        longPressActive = true;
         longPressInterval = setInterval(() => {
-          if (!touchStart) { clearInterval(longPressInterval); longPressInterval = null; return; }
+          if (!longPressActive) { clearInterval(longPressInterval); longPressInterval = null; return; }
           const h = window.innerWidth / 2;
           if (touchStart.x < h) revealNextAyah();
           else hidePrevAyah();
           if (navigator.vibrate) navigator.vibrate(10);
-        }, 350);
+        }, 600);
       }
     }, LONG_PRESS_TIME);
   }
@@ -294,6 +296,7 @@
     if (Math.abs(dx) > TAP_MAX_DIST || Math.abs(dy) > TAP_MAX_DIST) {
       touchStart.moved = true;
       if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+      longPressActive = false;
       if (longPressInterval) { clearInterval(longPressInterval); longPressInterval = null; }
     }
   }
