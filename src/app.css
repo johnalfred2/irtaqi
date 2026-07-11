@@ -108,6 +108,7 @@ html, body {
 
 .svg-container [id^="md-word-"] {
   transition: opacity 0.3s ease-out;
+  backface-visibility: hidden;
 }
 
 @media (display-mode: browser) {
