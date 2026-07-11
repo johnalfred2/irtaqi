@@ -68,13 +68,14 @@
   let touchStart = null;
   let longPressTimer = null;
   let longPressInterval = null;
-  let longPressActive = false;
+  let activeTouches = 0;
 
   let wakeLock = null;
 
   onMount(() => {
     window.addEventListener('keydown', handleKey);
-    window.addEventListener('touchend', onTouchEnd);
+    window.addEventListener('touchstart', () => { activeTouches++; });
+    window.addEventListener('touchend', () => { activeTouches = Math.max(0, activeTouches - 1); });
 
     const STORAGE_VERSION = 'v2';
     if (localStorage.getItem('quran-storage-version') !== STORAGE_VERSION) {
@@ -177,7 +178,6 @@
 
   onDestroy(() => {
     window.removeEventListener('keydown', handleKey);
-    window.removeEventListener('touchend', onTouchEnd);
     document.removeEventListener('visibilitychange', handleVisibility);
     releaseWakeLock();
     flushState();
@@ -278,24 +278,22 @@
         else hidePrevAyah();
         touchStart.fired = true;
         if (navigator.vibrate) navigator.vibrate(15);
-        longPressActive = true;
         const h = window.innerWidth / 2;
         const doLongPress = () => {
-          if (!longPressActive) return;
+          if (activeTouches === 0) { clearTimeout(longPressInterval); longPressInterval = null; return; }
           if (touchStart.x < h) revealNextAyah();
           else hidePrevAyah();
           if (navigator.vibrate) navigator.vibrate(10);
         };
         const scheduleNext = () => {
-          if (!longPressActive) return;
+          if (activeTouches === 0) return;
           longPressInterval = setTimeout(() => {
-            if (!longPressActive) return;
             doLongPress();
             scheduleNext();
           }, 800);
         };
         longPressInterval = setTimeout(() => {
-          if (!longPressActive) return;
+          if (activeTouches === 0) return;
           doLongPress();
           scheduleNext();
         }, 900);
@@ -311,14 +309,12 @@
     if (Math.abs(dx) > TAP_MAX_DIST || Math.abs(dy) > TAP_MAX_DIST) {
       touchStart.moved = true;
       if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-      longPressActive = false;
       if (longPressInterval) { clearTimeout(longPressInterval); longPressInterval = null; }
     }
   }
 
   function onTouchEnd(e) {
     if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-    longPressActive = false;
     if (longPressInterval) { clearTimeout(longPressInterval); longPressInterval = null; }
     if (!touchStart) return;
     const t = e.changedTouches[0];
@@ -536,6 +532,7 @@
     aria-label={t.appAriaLabel}
     ontouchstart={onTouchStart}
     ontouchmove={onTouchMove}
+    ontouchend={onTouchEnd}
   >
     <div class="relative flex-1 w-full min-h-0">
       <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} {t} {lang} />
