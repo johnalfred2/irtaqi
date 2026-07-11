@@ -488,10 +488,10 @@
   {/if}
 
   <header class="flex items-center justify-between px-5 py-2.5 bg-(--bg) border-b border-(--border-secondary) shrink-0 z-50">
-    <span class="text-(length:clamp(0.85rem,2.5vw,1.1rem)) font-semibold text-(--text)">{lang === 'ar' ? currentSurah.arabic : lang === 'tr' ? currentSurah.turkish : currentSurah.name}</span>
+    <span class="text-clamp-title font-semibold text-(--text)">{lang === 'ar' ? currentSurah.arabic : lang === 'tr' ? currentSurah.turkish : currentSurah.name}</span>
     <span class="flex items-center gap-3">
-      <span class="text-(length:clamp(0.75rem,2vw,0.95rem)) text-(--text-secondary)">{t.juz} {formatNumber(activeJuz, lang)}</span>
-      <button class="w-(length:clamp(2.25rem,5.5vw,2.75rem)) h-(length:clamp(2.25rem,5.5vw,2.75rem)) rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={openSettings} title={t.settings}>
+      <span class="text-clamp-subtitle text-(--text-secondary)">{t.juz} {formatNumber(activeJuz, lang)}</span>
+      <button class="btn-clamp-top rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={openSettings} title={t.settings}>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"/>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -515,15 +515,15 @@
   </div>
 
   <footer class="px-5 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-(--bg) border-t border-(--border-secondary) flex flex-col items-center gap-2 shrink-0">
-      <div class="text-(length:clamp(0.75rem,2vw,0.9rem)) text-(--text-secondary) font-semibold mb-[0.15rem]">{t.page} {formatNumber(activePage, lang)}</div>
+      <div class="text-clamp-page text-(--text-secondary) font-semibold mb-[0.15rem]">{t.page} {formatNumber(activePage, lang)}</div>
       <div class="flex items-center gap-4">
-        <button class="w-(length:clamp(2.5rem,6vw,3rem)) h-(length:clamp(2.5rem,6vw,3rem)) rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={openNavMenu} title={t.openNav}>
+        <button class="btn-clamp-bottom rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={openNavMenu} title={t.openNav}>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/>
             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor"/>
           </svg>
         </button>
-        <button class="w-(length:clamp(2.5rem,6vw,3rem)) h-(length:clamp(2.5rem,6vw,3rem)) rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={handleToggleAll} title={eyeOpen ? t.hideAll : t.showAll}>
+        <button class="btn-clamp-bottom rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={handleToggleAll} title={eyeOpen ? t.hideAll : t.showAll}>
           {#if eyeOpen}
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -538,7 +538,7 @@
             </svg>
           {/if}
         </button>
-        <button class="w-(length:clamp(2.5rem,6vw,3rem)) h-(length:clamp(2.5rem,6vw,3rem)) rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={handleToggleTheme} title={darkTheme ? t.lightMode : t.darkMode}>
+        <button class="btn-clamp-bottom rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={handleToggleTheme} title={darkTheme ? t.lightMode : t.darkMode}>
           {#if darkTheme}
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"/>
@@ -558,14 +558,14 @@
           {/if}
         </button>
       </div>
-      <div class="text-(length:clamp(0.65rem,1.8vw,0.8rem)) text-(--text-muted) text-center leading-[1.4]">
+      <div class="text-clamp-hint text-(--text-muted) text-center leading-[1.4]">
         {#if isTouchDevice}
           {t.touchHint}
         {:else}
-          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">Space</kbd>/<kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">&larr;</kbd> {t.nextWord} &middot;</span>
-          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">Shift</kbd>+<kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">Space</kbd> {t.nextAyah} &middot;</span>
-          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">h</kbd> {t.hideAllSmall} &middot; <kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">s</kbd> {t.showAllSmall} &middot;</span>
-          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">n</kbd>/<kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">p</kbd> {t.nextPrevPage}</span>
+          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-clamp-kbd text-(--text)">Space</kbd>/<kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-clamp-kbd text-(--text)">&larr;</kbd> {t.nextWord} &middot;</span>
+          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-clamp-kbd text-(--text)">Shift</kbd>+<kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-clamp-kbd text-(--text)">Space</kbd> {t.nextAyah} &middot;</span>
+          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-clamp-kbd text-(--text)">h</kbd> {t.hideAllSmall} &middot; <kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-clamp-kbd text-(--text)">s</kbd> {t.showAllSmall} &middot;</span>
+          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-clamp-kbd text-(--text)">n</kbd>/<kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-clamp-kbd text-(--text)">p</kbd> {t.nextPrevPage}</span>
         {/if}
       </div>
     </footer>
