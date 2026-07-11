@@ -312,14 +312,14 @@
       touchStart.moved = true;
       if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
       longPressActive = false;
-      if (longPressInterval) { clearInterval(longPressInterval); longPressInterval = null; }
+      if (longPressInterval) { clearTimeout(longPressInterval); longPressInterval = null; }
     }
   }
 
   function onTouchEnd(e) {
     if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
     longPressActive = false;
-    if (longPressInterval) { clearInterval(longPressInterval); longPressInterval = null; }
+    if (longPressInterval) { clearTimeout(longPressInterval); longPressInterval = null; }
     if (!touchStart) return;
     const t = e.changedTouches[0];
     const dx = t.clientX - touchStart.x;
