@@ -74,6 +74,7 @@
 
   onMount(() => {
     window.addEventListener('keydown', handleKey);
+    window.addEventListener('touchend', onTouchEnd);
 
     const STORAGE_VERSION = 'v2';
     if (localStorage.getItem('quran-storage-version') !== STORAGE_VERSION) {
@@ -176,6 +177,7 @@
 
   onDestroy(() => {
     window.removeEventListener('keydown', handleKey);
+    window.removeEventListener('touchend', onTouchEnd);
     document.removeEventListener('visibilitychange', handleVisibility);
     releaseWakeLock();
     flushState();
@@ -526,7 +528,6 @@
     aria-label={t.appAriaLabel}
     ontouchstart={onTouchStart}
     ontouchmove={onTouchMove}
-    ontouchend={onTouchEnd}
   >
     <div class="relative flex-1 w-full min-h-0">
       <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} {t} {lang} />
