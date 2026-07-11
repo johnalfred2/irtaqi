@@ -159,11 +159,11 @@
   }
 </script>
 
-<div class="mushaf-page" class:loading={isLoading}>
+<div class="w-full h-full flex items-center justify-center overflow-hidden" class:min-h-[200px]={isLoading}>
   {#if isLoading}
-    <div class="page-loading">{t ? t.loadingPage.replace('{n}', formatNumber(pageNumber, lang)) : `Loading page ${pageNumber}...`}</div>
+    <div class="text-center text-(--text-secondary) text-sm py-10 ltr">{t ? t.loadingPage.replace('{n}', formatNumber(pageNumber, lang)) : `Loading page ${pageNumber}...`}</div>
   {:else if loadError}
-    <div class="page-error">{t ? t.failedToLoad.replace('{n}', formatNumber(pageNumber, lang)) : `Failed to load page ${pageNumber}`}</div>
+    <div class="text-center text-(--error) text-sm py-10 ltr">{t ? t.failedToLoad.replace('{n}', formatNumber(pageNumber, lang)) : `Failed to load page ${pageNumber}`}</div>
   {/if}
   <div class="svg-container" bind:this={svgContainer}></div>
 </div>

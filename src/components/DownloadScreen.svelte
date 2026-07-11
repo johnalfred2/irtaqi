@@ -47,139 +47,35 @@
   }
 </script>
 
-<div class="download-screen">
+<div class="fixed inset-0 bg-black flex items-center justify-center z-200 p-6 text-[#e0e0e0] font-sans">
   {#if ready}
-    <div class="ds-card">
-      <p class="ds-ready">{t ? t.allDownloaded : 'All pages downloaded successfully.'}</p>
-      <button class="ds-btn" onclick={enter}>{t ? t.openQuran : 'Open Quran'}</button>
+    <div class="text-center max-w-[400px] w-full">
+      <p class="text-[15px] text-green-600 m-0 mb-6">{t ? t.allDownloaded : 'All pages downloaded successfully.'}</p>
+      <button class="px-8 py-3 border border-[#333] rounded-lg bg-[#111] text-[#e0e0e0] text-[15px] cursor-pointer min-h-[44px] transition-[background] duration-150 hover:bg-[#222]" onclick={enter}>{t ? t.openQuran : 'Open Quran'}</button>
     </div>
   {:else if !running}
-    <div class="ds-card">
-      <h1 class="ds-title">{t ? t.quranAssistant : 'Quran Assistant'}</h1>
-      <p class="ds-desc">
+    <div class="text-center max-w-[400px] w-full">
+      <h1 class="text-[22px] font-semibold m-0 mb-4 text-[#e0e0e0]">{t ? t.quranAssistant : 'Quran Assistant'}</h1>
+      <p class="text-sm text-[#888] m-0 mb-7 leading-[1.5]">
         {t ? t.downloadDesc1 : 'Download all 604 Quran pages for offline reading.'}
         <br/>
         {t ? t.downloadDesc2 : 'This one-time download requires an internet connection.'}
       </p>
-      <button class="ds-btn ds-btn-primary" onclick={begin}>{t ? t.startDownload : 'Start Download'}</button>
+      <button class="px-8 py-3 border border-[#555] rounded-lg bg-[#222] text-[#e0e0e0] text-[15px] cursor-pointer min-h-[44px] transition-[background] duration-150 hover:bg-[#333]" onclick={begin}>{t ? t.startDownload : 'Start Download'}</button>
     </div>
   {:else}
-    <div class="ds-card">
-      <h1 class="ds-title">{t ? t.downloadTitle : 'Downloading...'}</h1>
-      <div class="ds-bar-track">
-        <div class="ds-bar-fill" style="width: {total > 0 ? (progress / total) * 100 : 0}%"></div>
+    <div class="text-center max-w-[400px] w-full">
+      <h1 class="text-[22px] font-semibold m-0 mb-4 text-[#e0e0e0]">{t ? t.downloadTitle : 'Downloading...'}</h1>
+      <div class="h-[6px] rounded-[3px] bg-[#222] overflow-hidden my-5">
+        <div class="h-full bg-[#e0e0e0] rounded-[3px] transition-[width] duration-300" style="width: {total > 0 ? (progress / total) * 100 : 0}%"></div>
       </div>
-      <p class="ds-count">
-        <span class="ds-num">{formatNumber(progress, lang)}</span> / <span class="ds-num">{formatNumber(total, lang)}</span> {t ? t.pages : 'pages'}
+      <p class="text-sm text-[#888] m-0 mb-1">
+        <span class="text-[#e0e0e0] tabular-nums">{formatNumber(progress, lang)}</span> / <span class="text-[#e0e0e0] tabular-nums">{formatNumber(total, lang)}</span> {t ? t.pages : 'pages'}
       </p>
-      <p class="ds-status">{status}</p>
+      <p class="text-xs text-[#555] m-0">{status}</p>
       {#if error}
-        <p class="ds-error">{error}</p>
+        <p class="text-xs text-[#ff6b6b] mt-2">{error}</p>
       {/if}
     </div>
   {/if}
 </div>
-
-<style>
-  .download-screen {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    padding: 24px;
-    color: #e0e0e0;
-    font-family: sans-serif;
-  }
-
-  .ds-card {
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-  }
-
-  .ds-title {
-    font-size: 22px;
-    font-weight: 600;
-    margin: 0 0 16px;
-    color: #e0e0e0;
-  }
-
-  .ds-desc {
-    font-size: 14px;
-    color: #888;
-    margin: 0 0 28px;
-    line-height: 1.5;
-  }
-
-  .ds-bar-track {
-    height: 6px;
-    border-radius: 3px;
-    background: #222;
-    overflow: hidden;
-    margin: 20px 0 12px;
-  }
-
-  .ds-bar-fill {
-    height: 100%;
-    background: #e0e0e0;
-    border-radius: 3px;
-    transition: width 0.3s ease;
-  }
-
-  .ds-count {
-    font-size: 13px;
-    color: #888;
-    margin: 0 0 4px;
-  }
-
-  .ds-num {
-    color: #e0e0e0;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .ds-status {
-    font-size: 12px;
-    color: #555;
-    margin: 0;
-  }
-
-  .ds-error {
-    font-size: 11px;
-    color: #ff6b6b;
-    margin: 8px 0 0;
-  }
-
-  .ds-btn {
-    padding: 12px 32px;
-    border: 1px solid #333;
-    border-radius: 8px;
-    background: #111;
-    color: #e0e0e0;
-    font-size: 15px;
-    cursor: pointer;
-    min-height: 44px;
-    transition: background 0.15s;
-  }
-
-  .ds-btn:hover {
-    background: #222;
-  }
-
-  .ds-btn-primary {
-    background: #222;
-    border-color: #555;
-  }
-
-  .ds-btn-primary:hover {
-    background: #333;
-  }
-
-  .ds-ready {
-    font-size: 15px;
-    color: #4caf50;
-    margin: 0 0 24px;
-  }
-</style>

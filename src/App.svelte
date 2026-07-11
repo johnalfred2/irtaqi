@@ -487,11 +487,11 @@
     <div class="global-error">{errorMsg}</div>
   {/if}
 
-  <header class="top-bar">
-    <span class="top-bar-left">{lang === 'ar' ? currentSurah.arabic : lang === 'tr' ? currentSurah.turkish : currentSurah.name}</span>
-    <span class="top-bar-right">
-      <span class="top-bar-juz">{t.juz} {formatNumber(activeJuz, lang)}</span>
-      <button class="top-bar-btn" onclick={openSettings} title={t.settings}>
+  <header class="flex items-center justify-between px-5 py-2.5 bg-(--bg) border-b border-(--border-secondary) shrink-0 z-50">
+    <span class="text-(length:clamp(0.85rem,2.5vw,1.1rem)) font-semibold text-(--text)">{lang === 'ar' ? currentSurah.arabic : lang === 'tr' ? currentSurah.turkish : currentSurah.name}</span>
+    <span class="flex items-center gap-3">
+      <span class="text-(length:clamp(0.75rem,2vw,0.95rem)) text-(--text-secondary)">{t.juz} {formatNumber(activeJuz, lang)}</span>
+      <button class="w-(length:clamp(2.25rem,5.5vw,2.75rem)) h-(length:clamp(2.25rem,5.5vw,2.75rem)) rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={openSettings} title={t.settings}>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"/>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -501,7 +501,7 @@
   </header>
 
   <div
-    class="page-container"
+    class="flex flex-col items-center justify-center p-1 flex-1 overflow-hidden min-h-0 [touch-action:manipulation]"
     bind:this={pageContainerEl}
     role="application"
     aria-label={t.appAriaLabel}
@@ -509,21 +509,21 @@
     ontouchmove={onTouchMove}
     ontouchend={onTouchEnd}
   >
-    <div class="page-stack">
+    <div class="relative flex-1 w-full min-h-0">
       <MushafPage pageNumber={activePage} revealedUpto={activeRevealed} onLoaded={onPageLoaded} {t} {lang} />
     </div>
   </div>
 
-  <footer class="bottom-bar">
-      <div class="bottom-page">{t.page} {formatNumber(activePage, lang)}</div>
-      <div class="bottom-toggles">
-        <button class="bottom-btn" onclick={openNavMenu} title={t.openNav}>
+  <footer class="px-5 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-(--bg) border-t border-(--border-secondary) flex flex-col items-center gap-2 shrink-0">
+      <div class="text-(length:clamp(0.75rem,2vw,0.9rem)) text-(--text-secondary) font-semibold mb-[0.15rem]">{t.page} {formatNumber(activePage, lang)}</div>
+      <div class="flex items-center gap-4">
+        <button class="w-(length:clamp(2.5rem,6vw,3rem)) h-(length:clamp(2.5rem,6vw,3rem)) rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={openNavMenu} title={t.openNav}>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/>
             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor"/>
           </svg>
         </button>
-        <button class="bottom-btn" onclick={handleToggleAll} title={eyeOpen ? t.hideAll : t.showAll}>
+        <button class="w-(length:clamp(2.5rem,6vw,3rem)) h-(length:clamp(2.5rem,6vw,3rem)) rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={handleToggleAll} title={eyeOpen ? t.hideAll : t.showAll}>
           {#if eyeOpen}
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -538,7 +538,7 @@
             </svg>
           {/if}
         </button>
-        <button class="bottom-btn" onclick={handleToggleTheme} title={darkTheme ? t.lightMode : t.darkMode}>
+        <button class="w-(length:clamp(2.5rem,6vw,3rem)) h-(length:clamp(2.5rem,6vw,3rem)) rounded-full border-none bg-[rgba(128,128,128,0.12)] text-(--text-nav) flex items-center justify-center cursor-pointer backdrop-blur-[6px] transition-[background] duration-150 active:bg-[rgba(128,128,128,0.25)]" onclick={handleToggleTheme} title={darkTheme ? t.lightMode : t.darkMode}>
           {#if darkTheme}
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"/>
@@ -558,155 +558,143 @@
           {/if}
         </button>
       </div>
-      <div class="bottom-hints">
+      <div class="text-(length:clamp(0.65rem,1.8vw,0.8rem)) text-(--text-muted) text-center leading-[1.4]">
         {#if isTouchDevice}
           {t.touchHint}
         {:else}
-          <span><kbd>Space</kbd>/<kbd>&larr;</kbd> {t.nextWord} &middot;</span>
-          <span><kbd>Shift</kbd>+<kbd>Space</kbd> {t.nextAyah} &middot;</span>
-          <span><kbd>h</kbd> {t.hideAllSmall} &middot; <kbd>s</kbd> {t.showAllSmall} &middot;</span>
-          <span><kbd>n</kbd>/<kbd>p</kbd> {t.nextPrevPage}</span>
+          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">Space</kbd>/<kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">&larr;</kbd> {t.nextWord} &middot;</span>
+          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">Shift</kbd>+<kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">Space</kbd> {t.nextAyah} &middot;</span>
+          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">h</kbd> {t.hideAllSmall} &middot; <kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">s</kbd> {t.showAllSmall} &middot;</span>
+          <span><kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">n</kbd>/<kbd class="bg-(--bg-tertiary) border border-(--border) rounded px-[5px] py-[1px] font-mono text-(length:clamp(0.55rem,1.4vw,0.7rem)) text-(--text)">p</kbd> {t.nextPrevPage}</span>
         {/if}
       </div>
     </footer>
 
   {#if showNavMenu}
-    <div class="nav-menu-backdrop" onclick={closeNavMenu} onkeydown={(e) => e.key === 'Escape' && closeNavMenu()} role="presentation">
+    <div class="fixed inset-0 backdrop-blur-[6px] bg-[rgba(0,0,0,0.25)] flex items-center justify-center z-100 p-4 light:bg-[rgba(255,255,255,0.25)]" onclick={closeNavMenu} onkeydown={(e) => e.key === 'Escape' && closeNavMenu()} role="presentation">
       <!-- svelte-ignore a11y_click_events_have_key_events -->
-      <div class="nav-menu" tabindex="-1" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
-        <div class="nav-menu-field">
-          <span class="nav-menu-label">{t.surah}</span>
-          <select class="nav-menu-select" value={menuSurah} onchange={onMenuSurahChange}>
+      <div class="max-w-[400px] w-full bg-(--bg-secondary) border border-(--border) rounded-xl p-5 pb-4 shadow-[0_8px_32px_var(--card-shadow)] flex flex-col gap-3.5" tabindex="-1" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+        <div class="flex items-center gap-3">
+          <span class="text-sm font-semibold text-(--text) min-w-[52px] shrink-0">{t.surah}</span>
+          <select class="flex-1 px-3 py-2.5 border border-(--border) rounded-md bg-(--bg) text-(--text) text-sm cursor-pointer min-h-[44px]" value={menuSurah} onchange={onMenuSurahChange}>
             {#each surahs as s}
-              <option value={s.number}>{formatNumber(s.number, lang)}. {lang === 'ar' ? s.arabic : lang === 'tr' ? s.turkish : s.name}</option>
+              <option value={s.number} class="bg-(--bg) text-(--text)">{formatNumber(s.number, lang)}. {lang === 'ar' ? s.arabic : lang === 'tr' ? s.turkish : s.name}</option>
             {/each}
           </select>
         </div>
-        <div class="nav-menu-field">
-          <span class="nav-menu-label">{t.juz}</span>
-          <select class="nav-menu-select" value={menuJuz} onchange={onMenuJuzChange}>
+        <div class="flex items-center gap-3">
+          <span class="text-sm font-semibold text-(--text) min-w-[52px] shrink-0">{t.juz}</span>
+          <select class="flex-1 px-3 py-2.5 border border-(--border) rounded-md bg-(--bg) text-(--text) text-sm cursor-pointer min-h-[44px]" value={menuJuz} onchange={onMenuJuzChange}>
             {#each Array.from({ length: 30 }, (_, i) => i + 1) as j}
-              <option value={j}>{t.juz} {formatNumber(j, lang)}</option>
+              <option value={j} class="bg-(--bg) text-(--text)">{t.juz} {formatNumber(j, lang)}</option>
             {/each}
           </select>
         </div>
-        <div class="nav-menu-field">
-          <span class="nav-menu-label">{t.page}</span>
-          <select class="nav-menu-select" value={menuPage} onchange={onMenuPageChange}>
+        <div class="flex items-center gap-3">
+          <span class="text-sm font-semibold text-(--text) min-w-[52px] shrink-0">{t.page}</span>
+          <select class="flex-1 px-3 py-2.5 border border-(--border) rounded-md bg-(--bg) text-(--text) text-sm cursor-pointer min-h-[44px]" value={menuPage} onchange={onMenuPageChange}>
             {#each Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1) as p}
-              <option value={p}>{t.page} {formatNumber(p, lang)}</option>
+              <option value={p} class="bg-(--bg) text-(--text)">{t.page} {formatNumber(p, lang)}</option>
             {/each}
           </select>
         </div>
-        <button class="nav-menu-go" onclick={goToNavTarget}>{t.go}</button>
+        <button class="w-full py-3 border-none rounded-lg bg-(--text) text-(--bg) text-sm font-semibold cursor-pointer transition-opacity duration-150 hover:opacity-85 active:opacity-70 min-h-[44px]" onclick={goToNavTarget}>{t.go}</button>
       </div>
     </div>
   {/if}
 
   {#if showSettings}
-    <div class="nav-menu-backdrop" onclick={closeSettings} onkeydown={(e) => e.key === 'Escape' && closeSettings()} role="presentation">
+    <div class="fixed inset-0 backdrop-blur-[6px] bg-[rgba(0,0,0,0.25)] flex items-center justify-center z-100 p-4 light:bg-[rgba(255,255,255,0.25)]" onclick={closeSettings} onkeydown={(e) => e.key === 'Escape' && closeSettings()} role="presentation">
       <!-- svelte-ignore a11y_click_events_have_key_events -->
-      <div class="nav-menu" tabindex="-1" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
-        <h2 class="nav-menu-heading">{t.settings}</h2>
+      <div class="max-w-[400px] w-full bg-(--bg-secondary) border border-(--border) rounded-xl p-5 pb-4 shadow-[0_8px_32px_var(--card-shadow)] flex flex-col gap-3.5" tabindex="-1" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+        <h2 class="m-0 text-lg font-semibold text-(--text)">{t.settings}</h2>
 
-        <div class="settings-section">
-          <p class="settings-section-title">{t.offlineStorage}</p>
+        <div class="pt-1">
+          <p class="text-xs font-semibold text-(--text-muted) uppercase tracking-[0.5px] mb-2">{t.offlineStorage}</p>
           {#if isDownloading}
-            <div class="ds-bar-track">
-              <div class="ds-bar-fill" style="width: {downloadProgress / TOTAL_PAGES * 100}%"></div>
+            <div class="h-[6px] rounded-[3px] bg-(--bg-tertiary) overflow-hidden my-2">
+              <div class="h-full bg-(--text) rounded-[3px] transition-[width] duration-300" style="width: {downloadProgress / TOTAL_PAGES * 100}%"></div>
             </div>
-            <p class="settings-status">{formatNumber(downloadProgress, lang)} / {formatNumber(TOTAL_PAGES, lang)} {t.pages}</p>
+            <p class="text-xs text-(--text-secondary) mt-[6px]">{formatNumber(downloadProgress, lang)} / {formatNumber(TOTAL_PAGES, lang)} {t.pages}</p>
           {:else if isDownloaded}
-            <p class="settings-status settings-ok">{t.allCached}</p>
-            <button class="nav-menu-go nav-menu-go-danger" onclick={deleteAllPages}>{t.deleteDownloaded}</button>
+            <p class="text-xs text-(--text-secondary) mt-[6px] text-green-600">{t.allCached}</p>
+            <button class="w-full py-3 border border-[#ff6b6b] rounded-lg bg-transparent text-[#ff6b6b] text-sm font-semibold cursor-pointer transition-[background] duration-150 hover:bg-[rgba(255,107,107,0.1)] min-h-[44px]" onclick={deleteAllPages}>{t.deleteDownloaded}</button>
           {:else}
-            <button class="nav-menu-go" onclick={startDownloadAll}>{t.downloadAll}</button>
-            <p class="settings-status">{t.pagesWillBeCached}</p>
+            <button class="w-full py-3 border-none rounded-lg bg-(--text) text-(--bg) text-sm font-semibold cursor-pointer transition-opacity duration-150 hover:opacity-85 active:opacity-70 min-h-[44px]" onclick={startDownloadAll}>{t.downloadAll}</button>
+            <p class="text-xs text-(--text-secondary) mt-[6px]">{t.pagesWillBeCached}</p>
           {/if}
         </div>
 
-        <div class="settings-section">
-          <p class="settings-section-title">{t.appearance}</p>
-          <button class="nav-menu-go nav-menu-go-secondary" onclick={handleToggleTheme}>
+        <div class="pt-1">
+          <p class="text-xs font-semibold text-(--text-muted) uppercase tracking-[0.5px] mb-2">{t.appearance}</p>
+          <button class="w-full py-3 border-none rounded-lg bg-(--bg-tertiary) text-(--text) text-sm font-semibold cursor-pointer transition-opacity duration-150 hover:opacity-85 min-h-[44px]" onclick={handleToggleTheme}>
             {t.themeToggle.replace('{mode}', darkTheme ? t.dark : t.light)}
           </button>
         </div>
 
-        <div class="settings-section">
-          <p class="settings-section-title">{t.language}</p>
-          <select class="nav-menu-select" value={lang} onchange={(e) => lang = e.target.value}>
+        <div class="pt-1">
+          <p class="text-xs font-semibold text-(--text-muted) uppercase tracking-[0.5px] mb-2">{t.language}</p>
+          <select class="flex-1 w-full px-3 py-2.5 border border-(--border) rounded-md bg-(--bg) text-(--text) text-sm cursor-pointer min-h-[44px]" value={lang} onchange={(e) => lang = e.target.value}>
             {#each LANGUAGES as l}
-              <option value={l.code}>{l.name}</option>
+              <option value={l.code} class="bg-(--bg) text-(--text)">{l.name}</option>
             {/each}
           </select>
         </div>
 
-        <button class="nav-menu-go nav-menu-go-secondary" onclick={closeSettings}>{t.close}</button>
+        <button class="w-full py-3 border-none rounded-lg bg-(--bg-tertiary) text-(--text) text-sm font-semibold cursor-pointer transition-opacity duration-150 hover:opacity-85 min-h-[44px]" onclick={closeSettings}>{t.close}</button>
       </div>
     </div>
   {/if}
 
   {#if showInstallBanner}
-    <div class="install-banner">
-      <span class="install-banner-text">{t.installText}</span>
-      <div class="install-banner-actions">
-        <button class="install-btn install-btn-primary" onclick={handleInstall}>{t.install}</button>
-        <button class="install-btn install-btn-dismiss" onclick={dismissInstallBanner}>{t.notNow}</button>
+    <div class="fixed bottom-0 left-0 right-0 z-90 bg-(--bg-secondary) border-t border-(--border) px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] flex items-center justify-between gap-3 backdrop-blur-[6px]">
+      <span class="text-sm text-(--text) leading-[1.3]">{t.installText}</span>
+      <div class="flex gap-2 shrink-0">
+        <button class="px-4 py-2 border-none rounded-md bg-(--text) text-(--bg) text-sm font-semibold cursor-pointer min-h-[36px] transition-opacity duration-150 active:opacity-70" onclick={handleInstall}>{t.install}</button>
+        <button class="px-4 py-2 border border-(--border) rounded-md bg-transparent text-(--text-secondary) text-sm font-semibold cursor-pointer min-h-[36px] transition-opacity duration-150 active:opacity-70" onclick={dismissInstallBanner}>{t.notNow}</button>
       </div>
     </div>
   {/if}
 
   {#if showUpdateBanner}
-    <div class="install-banner">
-      <span class="install-banner-text">{t.newVersion}</span>
-      <div class="install-banner-actions">
-        <button class="install-btn install-btn-primary" onclick={() => location.reload()}>{t.reload}</button>
-        <button class="install-btn install-btn-dismiss" onclick={() => showUpdateBanner = false}>{t.later}</button>
+    <div class="fixed bottom-0 left-0 right-0 z-90 bg-(--bg-secondary) border-t border-(--border) px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] flex items-center justify-between gap-3 backdrop-blur-[6px]">
+      <span class="text-sm text-(--text) leading-[1.3]">{t.newVersion}</span>
+      <div class="flex gap-2 shrink-0">
+        <button class="px-4 py-2 border-none rounded-md bg-(--text) text-(--bg) text-sm font-semibold cursor-pointer min-h-[36px] transition-opacity duration-150 active:opacity-70" onclick={() => location.reload()}>{t.reload}</button>
+        <button class="px-4 py-2 border border-(--border) rounded-md bg-transparent text-(--text-secondary) text-sm font-semibold cursor-pointer min-h-[36px] transition-opacity duration-150 active:opacity-70" onclick={() => showUpdateBanner = false}>{t.later}</button>
       </div>
     </div>
   {/if}
 
   {#if showOverlay}
-    <div class="overlay-backdrop" onclick={() => (showOverlay = false)} onkeydown={(e) => e.key === 'Escape' && (showOverlay = false)} role="presentation">
-      <div class="overlay-card" tabindex="-1" bind:this={shortcutOverlayEl} onclick={(e) => e.stopPropagation()} onkeydown={(e) => { e.key === 'Tab' && trapFocus(e, e.currentTarget); e.stopPropagation(); }} role="dialog" aria-modal="true">
-        <h2>{t.keyboardShortcuts}</h2>
-        <table class="shortcut-table">
+    <div class="fixed inset-0 bg-(--overlay-bg) flex items-center justify-center z-100 p-4" onclick={() => (showOverlay = false)} onkeydown={(e) => e.key === 'Escape' && (showOverlay = false)} role="presentation">
+      <div class="bg-(--bg-secondary) border border-(--border) rounded-lg px-7 py-6 max-w-[460px] w-full max-h-[90vh] overflow-y-auto shadow-[0_8px_32px_var(--card-shadow)]" tabindex="-1" bind:this={shortcutOverlayEl} onclick={(e) => e.stopPropagation()} onkeydown={(e) => { e.key === 'Tab' && trapFocus(e, e.currentTarget); e.stopPropagation(); }} role="dialog" aria-modal="true">
+        <h2 class="m-0 mb-4 text-lg font-semibold text-(--text)">{t.keyboardShortcuts}</h2>
+        <table class="w-full border-collapse text-sm">
           <tbody>
-            <tr><td><kbd>Space</kbd> / <kbd>&larr;</kbd></td><td>{t.nextWord}</td></tr>
-            <tr><td><kbd>Shift</kbd> + <kbd>Space</kbd> / <kbd>Shift</kbd> + <kbd>&larr;</kbd></td><td>{t.nextAyah}</td></tr>
-            <tr><td><kbd>Backspace</kbd> / <kbd>&rarr;</kbd></td><td>{t.prevWord}</td></tr>
-            <tr><td><kbd>Shift</kbd> + <kbd>&rarr;</kbd></td><td>{t.prevAyah}</td></tr>
-            <tr><td><kbd>h</kbd></td><td>{t.hideAllAyahs}</td></tr>
-            <tr><td><kbd>s</kbd></td><td>{t.showAllAyahs}</td></tr>
-            <tr><td><kbd>t</kbd></td><td>{t.toggleTheme}</td></tr>
-            <tr><td><kbd>n</kbd> / <kbd>PgDn</kbd></td><td>{t.nextPage}</td></tr>
-            <tr><td><kbd>p</kbd> / <kbd>PgUp</kbd></td><td>{t.prevPage}</td></tr>
-            <tr><td><kbd>Home</kbd></td><td>{t.firstPage}</td></tr>
-            <tr><td><kbd>End</kbd></td><td>{t.lastPage}</td></tr>
-            <tr><td><kbd>?</kbd></td><td>{t.toggleOverlay}</td></tr>
-            <tr><td><kbd>Esc</kbd></td><td>{t.closeOverlay}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">Space</kbd> / <kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">&larr;</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.nextWord}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">Shift</kbd> + <kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">Space</kbd> / <kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">Shift</kbd> + <kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">&larr;</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.nextAyah}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">Backspace</kbd> / <kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">&rarr;</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.prevWord}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">Shift</kbd> + <kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">&rarr;</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.prevAyah}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">h</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.hideAllAyahs}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">s</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.showAllAyahs}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">t</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.toggleTheme}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">n</kbd> / <kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">PgDn</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.nextPage}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">p</kbd> / <kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">PgUp</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.prevPage}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">Home</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.firstPage}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">End</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.lastPage}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">?</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.toggleOverlay}</td></tr>
+            <tr><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text) whitespace-nowrap w-[45%]"><kbd class="bg-(--bg) border border-(--border) rounded px-[5px] py-[1px] font-mono text-xs text-(--text)">Esc</kbd></td><td class="px-1 py-2 border-b border-(--border-secondary) text-(--text)">{t.closeOverlay}</td></tr>
           </tbody>
         </table>
-        <p class="overlay-touch-note">{t.touchNote}</p>
-        <button class="overlay-close" onclick={() => (showOverlay = false)}>{t.close}</button>
+        <p class="my-4 mb-5 text-xs text-(--text-secondary) leading-[1.5]">{t.touchNote}</p>
+        <button class="block mx-auto px-6 py-2 border border-(--border) rounded-md bg-(--bg-tertiary) text-(--text) text-sm cursor-pointer hover:bg-(--border)" onclick={() => (showOverlay = false)}>{t.close}</button>
       </div>
     </div>
   {/if}
 {/if}
 
 <style>
-  .page-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    flex: 1;
-    overflow: hidden;
-    min-height: 0;
-    touch-action: manipulation;
-  }
-
   .global-error {
     background: #ff4444;
     color: #fff;
