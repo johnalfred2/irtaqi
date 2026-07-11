@@ -104,6 +104,7 @@ html, body {
 
 .svg-container [id^="md-aya-mark"] path {
   fill: var(--svg-fill-muted);
+  backface-visibility: hidden;
 }
 
 .svg-container [id^="md-word-"] {
