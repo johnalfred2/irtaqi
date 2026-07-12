@@ -114,7 +114,11 @@
       lang = savedLang;
     } else {
       const browserLangs = navigator.languages || [navigator.language || 'en'];
-      const browserLang = browserLangs.map(l => l.toLowerCase().slice(0, 2)).find(l => ['en', 'ar', 'tr'].includes(l)) || 'en';
+      let browserLang = browserLangs.map(l => l.toLowerCase().slice(0, 2)).find(l => ['en', 'ar', 'tr'].includes(l));
+      if (!browserLang) {
+        const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+        browserLang = intlLocale?.toLowerCase().slice(0, 2);
+      }
       lang = LANGUAGES.find(l => l.code === browserLang) ? browserLang : 'en';
     }
     const themeMeta = document.querySelector('meta[name="theme-color"]');
