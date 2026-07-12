@@ -105,11 +105,16 @@
     eyeOpen = localStorage.getItem('quran-eye-open') === 'true';
     darkTheme = localStorage.getItem('quran-dark-theme') !== 'false';
     document.documentElement.classList.toggle('light', !darkTheme);
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlLang = urlParams.get('lang');
     const savedLang = localStorage.getItem('quran-lang');
-    if (savedLang) {
+    if (urlLang && LANGUAGES.find(l => l.code === urlLang)) {
+      lang = urlLang;
+    } else if (savedLang) {
       lang = savedLang;
     } else {
-      const browserLang = (navigator.language || '').toLowerCase().slice(0, 2);
+      const browserLangs = navigator.languages || [navigator.language || 'en'];
+      const browserLang = browserLangs.map(l => l.toLowerCase().slice(0, 2)).find(l => ['en', 'ar', 'tr'].includes(l)) || 'en';
       lang = LANGUAGES.find(l => l.code === browserLang) ? browserLang : 'en';
     }
     const themeMeta = document.querySelector('meta[name="theme-color"]');
