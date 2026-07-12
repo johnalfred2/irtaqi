@@ -14,6 +14,20 @@
   const TAP_MAX_TIME = 300;
   const LONG_PRESS_TIME = 500;
 
+  function detectInitialLanguage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlLang = urlParams.get('lang');
+    if (urlLang && LANGUAGES.find(l => l.code === urlLang)) return urlLang;
+    const savedLang = localStorage.getItem('quran-lang');
+    if (savedLang) return savedLang;
+    const browserLangs = navigator.languages || [navigator.language || 'en'];
+    let browserLang = browserLangs.map(l => l.toLowerCase().slice(0, 2)).find(l => ['en', 'ar', 'tr'].includes(l));
+    if (!browserLang) {
+      browserLang = Intl.DateTimeFormat().resolvedOptions().locale?.toLowerCase().slice(0, 2);
+    }
+    return LANGUAGES.find(l => l.code === browserLang) ? browserLang : 'en';
+  }
+
   let downloadReady = $state(null);
   let activePage = $state(1);
   let activeLayout = $state(null);
@@ -37,7 +51,7 @@
   let downloadProgress = $state(0);
   let pagesDownloaded = $state(0);
   let isDownloaded = $derived(pagesDownloaded >= TOTAL_PAGES);
-  let lang = $state(localStorage.getItem('quran-lang') || 'en');
+  let lang = $state(detectInitialLanguage());
   let t = $derived(getTranslations(lang));
 
   let menuSurah = $derived(findSurahByPage(targetPage).number);
@@ -105,22 +119,6 @@
     eyeOpen = localStorage.getItem('quran-eye-open') === 'true';
     darkTheme = localStorage.getItem('quran-dark-theme') !== 'false';
     document.documentElement.classList.toggle('light', !darkTheme);
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlLang = urlParams.get('lang');
-    const savedLang = localStorage.getItem('quran-lang');
-    if (urlLang && LANGUAGES.find(l => l.code === urlLang)) {
-      lang = urlLang;
-    } else if (savedLang) {
-      lang = savedLang;
-    } else {
-      const browserLangs = navigator.languages || [navigator.language || 'en'];
-      let browserLang = browserLangs.map(l => l.toLowerCase().slice(0, 2)).find(l => ['en', 'ar', 'tr'].includes(l));
-      if (!browserLang) {
-        const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
-        browserLang = intlLocale?.toLowerCase().slice(0, 2);
-      }
-      lang = LANGUAGES.find(l => l.code === browserLang) ? browserLang : 'en';
-    }
     const themeMeta = document.querySelector('meta[name="theme-color"]');
     if (themeMeta) themeMeta.setAttribute('content', darkTheme ? '#000000' : '#f5f5f5');
 
